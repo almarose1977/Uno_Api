@@ -1,0 +1,10 @@
+.img-container {
+    background-image: url('https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcutewallpaper.org%2F21%2Funo-reverse-card-wallpapers%2FUno-Card-Game-Workshop.codes.png&sp=1606402664T3eec7e38e9bb5f83ec470b83d82a393a326605f6f4d46ec49803f39fb91db885');
+    opacity: 40%;
+    background-size: cover;
+    background-position: center;
+}
+
+.spielbrett {
+    opacity: 100%;
+}
