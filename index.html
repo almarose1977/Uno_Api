@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <!-- Our own custom CSS here -->
     <!-- <link href="assets/css/my.css" rel="stylesheet"> -->
-    <title>Uno Spiel</title>
+    <title>UNO by Aiste & Britta</title>
 </head>
-
 <body>
     <h1>Hallo Uno Spieler</h1>
 
     <h2>winke winke SWENGis</h2>
+    <img src="https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fimage.api.playstation.com%2Fcdn%2FEP0001%2FCUSA04040_00%2FLRI3Rg5MKOi5AkefFaMcChNv5WitM7sz.png&sp=1606396738Tc12ad8479a4ff0fdace0a451efa04d41756e9cefb66cc91e3351cddee8cbf107">
 
     <div class="alert alert-success" role="alert">
         Yaaaaaay bootstrap funktioniert </div>
@@ -26,19 +26,56 @@
         </div>
     </div>
 
+    <div class="modal fade" id="playerNames" tabindex="-1" role="dialog"
+    data-keyboard="false" data-backdrop="static">
+    <form id="playerNamesForm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Spielereingabe</h5>   
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <input type="text" class="form-control" id="player1_id" placeholder="Name Spieler 1 eingeben"></input>
+                <br>
+                <input type="text" class="form-control" id="player2_id" placeholder="Name Spieler 2 eingeben"></input>
+                <br>
+                <input type="text" class="form-control" id="player3_id" placeholder="Name Spieler 3 eingeben"></input>
+                <br>
+                <input type="text" class="form-control" id="player4_id" placeholder="Name Spieler 4 eingeben"></input>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" id="playerNamesSubmit" >UNO Spiel starten</button>
+            </div>
+          </div>
+        </div>
+    </form>   
+    </div>
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
-    <!-- Option 2: jQuery, Popper.js, and Bootstrap JS
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
-    -->
+    
     <!-- Our own custom JS here -->
     <!-- <script src="js/meinjs.js"> </script> -->
 </body>
+<script>
+    // Modalen Dialog öffnen um Namen einzugeben
+$('#playerNames').modal()   // mit diesem aufruf wird der inhalt des html angezeigt
+
+
+document.getElementById('playerNamesForm').addEventListener('submit', function(evt){
+    // Formular absenden verhindern
+    console.log("submit");
+    evt.preventDefault(); // verhindert das Abschicken des post requests vom submit und damit das neuladen der seite (wollen nicht, dass beim uno die seite neu geladen wird), dann weiter mit ajax...
+    // hier kommt der code hin, der anstelle des post requests passieren soll
+    
+    $('#playerNames').modal('hide');
+    
+})
+</script>
 
 </html>
