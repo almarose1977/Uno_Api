@@ -2,6 +2,7 @@ const menuIconEl = $('.menu-icon');
 const sidenavEl = $('.sidenav');
 const sidenavCloseEl = $('.sidenav__close-icon');
 
+
 // Add and remove provided class names
 function toggleClassName(el, className) {
     if (el.hasClass(className)) {
