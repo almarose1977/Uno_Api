@@ -140,18 +140,37 @@ document.getElementById('playerNamesForm').addEventListener('submit', function(e
     evt.preventDefault(); // verhindert das Abschicken des post requests vom submit und damit das neuladen der seite (wollen nicht, dass beim uno die seite neu geladen wird), dann weiter mit ajax...
     // hier kommt der code hin, der anstelle des post requests passieren soll
     
-    // die eingegebenen namen müssen in ein string array gespeichert werden, das ich dann der POST api/Game/Start übergebe
+    // die eingegebenen namen müssen in ein string array gespeichert werden, das ich dann der POST api/Game/Start übergeben
+    // Player Array erstellen
+    let playersList = [];
+    let name1 = document.getElementById("player1_id").value;
+    let name2 = document.getElementById("player2_id").value;
+    let name3 = document.getElementById("player3_id").value;
+    let name4 = document.getElementById("player4_id").value;
+    playersList.push(name1);
+    playersList.push(name2);
+    playersList.push(name3);
+    playersList.push(name4);
+    playersList.forEach(function(item, index, array){
+        console.log(item, index);
+    });
 
-    // let response = await fetch ("http://nowaunoweb.azurewebsites.net/api/game/start", {
-    //     method: 'POST',
-    //     body: JSON.stringify(playersList),  // playersList gibt's noch nicht --> String-Array
-    //     headers: {
-    //         'Content-type':'application/json; charset=UTF-8'
-    //     }
-    // });
-    // console.log(response);
+    // Spielernamen Nord, Ost, Sued, West zuordnen
+    let s1 = document.getElementById("sn-nord");
+    s1.innerText = name1;
+    document.getElementById("sn-ost").innerText = name2;
+    document.getElementById("sn-sued").innerText = name3;
+    document.getElementById("sn-west").innerText = name4;
+    
+    let response = fetch ("http://nowaunoweb.azurewebsites.net/api/game/start", {   // await funktioniert nicht, F12: SyntaxError: await is only valid in async function
+        method: 'POST',
+        body: JSON.stringify(playersList), 
+        headers: {
+            'Content-type':'application/json; charset=UTF-8'
+        }
+    });
+    console.log(response);
 
-    //alert("help");  // nur für testzwecke
     $('#playerNames').modal('hide');
 })
 </script>
