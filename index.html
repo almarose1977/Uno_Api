@@ -26,13 +26,14 @@
         </div>
     </div>
 
+    <!-- hier fängt modal dialog an-->
     <div class="modal fade" id="playerNames" tabindex="-1" role="dialog"
     data-keyboard="false" data-backdrop="static">
     <form id="playerNamesForm">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Spielereingabe</h5>   
+              <h5 class="modal-title">Spielerinneneingabe</h5>   
             </div>
             <div class="modal-body">
               <div class="form-group">
@@ -46,13 +47,12 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary" id="playerNamesSubmit" >UNO Spiel starten</button>
+              <button type="submit" class="btn btn-primary" id="playerNamesSubmit">UNO Spiel starten</button>
             </div>
           </div>
         </div>
     </form>   
     </div>
-    <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -64,8 +64,7 @@
 </body>
 <script>
     // Modalen Dialog öffnen um Namen einzugeben
-$('#playerNames').modal()   // mit diesem aufruf wird der inhalt des html angezeigt
-
+$('#playerNames').modal()   // mit diesem aufruf wird der inhalt des obigen html angezeigt
 
 document.getElementById('playerNamesForm').addEventListener('submit', function(evt){
     // Formular absenden verhindern
@@ -73,8 +72,19 @@ document.getElementById('playerNamesForm').addEventListener('submit', function(e
     evt.preventDefault(); // verhindert das Abschicken des post requests vom submit und damit das neuladen der seite (wollen nicht, dass beim uno die seite neu geladen wird), dann weiter mit ajax...
     // hier kommt der code hin, der anstelle des post requests passieren soll
     
+    // die eingegebenen namen müssen in ein string array gespeichert werden, das ich dann der POST api/Game/Start übergebe
+
+    // let response = await fetch ("http://nowaunoweb.azurewebsites.net/api/game/start", {
+    //     method: 'POST',
+    //     body: JSON.stringify(playersList),  // playersList gibt's noch nicht --> String-Array
+    //     headers: {
+    //         'Content-type':'application/json; charset=UTF-8'
+    //     }
+    // });
+    // console.log(response);
+
+    alert("help");
     $('#playerNames').modal('hide');
-    
 })
 </script>
 
