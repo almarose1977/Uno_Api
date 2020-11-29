@@ -1,184 +1,184 @@
-#body {
-    width: 100%;
-    height: auto;
-}
-
-#img-uno {
-    background-image: url('https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcdn3.tvweb.com%2Fi%2Farticle%2F5X1Wh3FWYZcA8xZCDFTSwb1ahohvq5%2F1200%3A100%2FUno-Game-Show.jpg&sp=1606593427T648532e333912904675c68b9b15669c85ec039761c9c618ffc051cea397a0f02');
-}
-
-.img-container {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: limegreen;
-    width: 100%;
-    height: auto;
-}
-
-.spielbrett {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
-    color: rgb(11, 1, 29);
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-#greeting {
-    padding-top: 45px;
-    padding-left: 25px;
-}
-
-
-/* ctn - container */
-
-#ctn-nord {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-
-/* sn - spielername */
-
-.sn {
-    width: 18%;
-    border-radius: 100px;
-    /* padding: 20px; */
-    margin-top: 20px;
-}
-
-#sn-nord {
-    display: flex;
-    align-items: center;
-    background-color: lightgreen;
-    width: 30%;
-    border-radius: 100px;
-    /* padding: 20px; */
-    margin-top: 20px;
-}
-
-
-/* sf - spielfeld */
-
-.sf {
-    padding: 20px;
-    justify-content: center;
-    border-radius: 18px;
-    min-width: 25vw;
-    min-height: 10vw;
-    opacity: 70%
-}
-
-#sf-nord {
-    background-color: lightgreen;
-    padding: 20px;
-    justify-content: center;
-    border-radius: 18px;
-    min-width: 25vw;
-    min-height: 10vw;
-    margin-top: 10px;
-    opacity: 70%
-}
-
-#ctn-west-mitte-ost {
-    /* border: solid 6px purple; */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0px;
-}
-
-#ctn-west {
-    display: flex;
-    align-items: flex-start;
-}
-
-#sn-west {
-    background-color: lightgoldenrodyellow;
-    width: 18%;
-    border-radius: 100px;
-    /* padding: 20px; */
-    margin: 6px;
-    -webkit-transform: rotate(270deg);
-    -moz-transform: rotate(270deg);
-    -o-transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    transform: rotate(270deg);
-}
-
-#sf-west {
-    background-color: lightgoldenrodyellow;
-    padding: 20px;
-    border-radius: 18px;
-    min-width: 25vw;
-    min-height: 10vw;
-    opacity: 70%;
-}
-
-#sf-mitte {
-    background-image: url('https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcdn3.tvweb.com%2Fi%2Farticle%2F5X1Wh3FWYZcA8xZCDFTSwb1ahohvq5%2F1200%3A100%2FUno-Game-Show.jpg&sp=1606593427T648532e333912904675c68b9b15669c85ec039761c9c618ffc051cea397a0f02');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    min-width: 20vw;
-    min-height: 10vw;
-    border-radius: 18px;
-    border: solid 5px darkgreen;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#ctn-ost {
-    display: flex;
-    justify-content: flex-end;
-}
-
-#sf-ost {
-    background-color: lightskyblue;
-    padding: 20px;
-    border-radius: 18px;
-    min-width: 25vw;
-    min-height: 10vw;
-    opacity: 70%
-}
-
-#sn-ost {
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
-    align-self: flex-end;
-    background-color: lightskyblue;
-    width: 18%;
-    border-radius: 100px;
-    /* padding: 20px; */
-    margin: 10px;
-}
-
-#ctn-sued {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#sf-sued {
-    background-color: lightcoral;
-    padding: 20px;
-    border-radius: 18px;
-    min-width: 25vw;
-    min-height: 10vw;
-    opacity: 70%
-}
-
-#sn-sued {
-    background-color: lightcoral;
-    width: 18%;
-    border-radius: 100px;
-    /* padding: 20px; */
-    margin: 10px;
-    margin-bottom: 20px;
-}
+    #body {
+        /* width: 100%;
+    height: auto; */
+    }
+    
+    #img-uno {
+        background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV96unxpovXV7-9aRzZ4Z20XNzSfpXXfjt6w&usqp=CAU');
+    }
+    
+    .img-container {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-color: limegreen;
+        width: 100%;
+        height: 100%;
+        min-width: 1000px;
+        min-height: 680px;
+    }
+    
+    .spielbrett {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+        color: rgb(11, 1, 29);
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    #greeting {
+        padding-top: 45px;
+        padding-left: 25px;
+    }
+    /* ctn - container */
+    
+    #ctn-nord {
+        padding-top: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    /* sn - spielername */
+    
+    .sn {
+        width: 18%;
+        border-radius: 100px;
+        /* padding: 20px; */
+        margin-top: 20px;
+    }
+    
+    #sn-nord {
+        display: flex;
+        align-items: center;
+        background-color: lightgreen;
+        width: 28%;
+        border-radius: 100px;
+        /* padding: 20px; */
+        margin-top: 20px;
+    }
+    /* sf - spielfeld */
+    
+    .sf {
+        padding: 20px;
+        justify-content: center;
+        border-radius: 18px;
+        min-width: 25vw;
+        min-height: 10vw;
+        opacity: 70%
+    }
+    
+    #sf-nord {
+        background-color: lightgreen;
+        padding: 20px;
+        justify-content: center;
+        border-radius: 18px;
+        min-width: 25vw;
+        min-height: 10vw;
+        margin-top: 10px;
+        opacity: 70%
+    }
+    
+    #ctn-west-mitte-ost {
+        /* border: solid 6px purple; */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px;
+    }
+    
+    #ctn-west {
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    #sn-west {
+        background-color: lightgoldenrodyellow;
+        width: 18%;
+        border-radius: 100px;
+        /* padding: 20px; */
+        margin: 6px;
+        -webkit-transform: rotate(270deg);
+        -moz-transform: rotate(270deg);
+        -o-transform: rotate(270deg);
+        -ms-transform: rotate(270deg);
+        transform: rotate(270deg);
+    }
+    
+    #sf-west {
+        background-color: lightgoldenrodyellow;
+        padding: 20px;
+        border-radius: 18px;
+        min-width: 25vw;
+        min-height: 10vw;
+        opacity: 70%;
+    }
+    
+    #sf-mitte {
+        background-image: url('https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcdn3.tvweb.com%2Fi%2Farticle%2F5X1Wh3FWYZcA8xZCDFTSwb1ahohvq5%2F1200%3A100%2FUno-Game-Show.jpg&sp=1606593427T648532e333912904675c68b9b15669c85ec039761c9c618ffc051cea397a0f02');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        min-width: 20vw;
+        min-height: 10vw;
+        border-radius: 18px;
+        border: solid 5px darkgreen;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 38px;
+    }
+    
+    #ctn-ost {
+        padding: 45px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    #sf-ost {
+        background-color: lightskyblue;
+        padding: 20px;
+        border-radius: 18px;
+        min-width: 25vw;
+        min-height: 10vw;
+        opacity: 70%
+    }
+    
+    #sn-ost {
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        transform: rotate(90deg);
+        align-self: flex-end;
+        background-color: lightskyblue;
+        width: 18%;
+        border-radius: 100px;
+        /* padding: 20px; */
+        margin: 10px;
+    }
+    
+    #ctn-sued {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 18px;
+    }
+    
+    #sf-sued {
+        background-color: lightcoral;
+        padding: 20px;
+        border-radius: 18px;
+        min-width: 25vw;
+        min-height: 10vw;
+        opacity: 70%
+    }
+    
+    #sn-sued {
+        background-color: lightcoral;
+        width: 10%;
+        border-radius: 100px;
+        /* padding: 20px; */
+        margin: 10px;
+        margin-bottom: 20px;
+    }
