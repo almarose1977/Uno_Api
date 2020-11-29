@@ -103,6 +103,13 @@ body {
     background-color: #E6E5E5;
 }
 
+.img-container {
+    background-image: url('https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fi.imgur.com%2Fsk4mOnl.png&sp=1606478388T93f5596758f70427858ed057d190470519d2d0b0e258155fc71a275fa518e1d7');
+    background-color: green;
+    background-size: cover;
+    background-position: center;
+}
+
 .main-header {
     display: flex;
     justify-content: space-between;
