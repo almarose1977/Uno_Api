@@ -43,6 +43,13 @@
                                 Name Nord
                             </div>
                             <div id="sf-nord">
+                                <div id="handkarten-nord-0" class="cards">Handkarte</div>
+                                <div id="handkarten-nord-1" class="cards">Handkarte</div>
+                                <div id="handkarten-nord-2" class="cards">Handkarte</div>
+                                <div id="handkarten-nord-3" class="cards">Handkarte</div>
+                                <div id="handkarten-nord-4" class="cards">Handkarte</div>
+                                <div id="handkarten-nord-5" class="cards">Handkarte</div>
+                                <div id="handkarten-nord-6" class="cards">Handkarte</div>
                                 hier werden karten aufgelegt...
                             </div>
                         </div>
@@ -57,11 +64,22 @@
                                 Name West
                             </div>
                             <div id="sf-west">
+                                <div id="handkarten-west-0" class="cards">Handkarte</div>
+                                <div id="handkarten-west-1" class="cards">Handkarte</div>
+                                <div id="handkarten-west-2" class="cards">Handkarte</div>
+                                <div id="handkarten-west-3" class="cards">Handkarte</div>
+                                <div id="handkarten-west-4" class="cards">Handkarte</div>
+                                <div id="handkarten-west-5" class="cards">Handkarte</div>
+                                <div id="handkarten-west-6" class="cards">Handkarte</div>
                                 hier werden karten aufgelegt...
                             </div>
                         </div>
-                        <div id="sf-mitte">
+                        <div id="sf-mitte_card_stack_new" class="cards" onclick="DrawCards();">
+                            <img src="images/cards/back0.png" height="200px">
                             hier wird der Kartenstapel aufgelegt...
+                        </div>
+                        <div id="sf-mitte_ablagestapel" class="cards">
+                            hier wird abgelegt
                         </div>
 
 
@@ -69,6 +87,13 @@
                         <div class="container" id="ctn-ost">
 
                             <div id="sf-ost">
+                                <div id="handkarten-ost-0" class="cards">Handkarte</div>
+                                <div id="handkarten-ost-1" class="cards">Handkarte</div>
+                                <div id="handkarten-ost-2" class="cards">Handkarte</div>
+                                <div id="handkarten-ost-3" class="cards">Handkarte</div>
+                                <div id="handkarten-ost-4" class="cards">Handkarte</div>
+                                <div id="handkarten-ost-5" class="cards">Handkarte</div>
+                                <div id="handkarten-ost-6" class="cards">Handkarte</div>
                                 hier werden karten aufgelegt...
                             </div>
                             <div class="row justify-content-center align-items-center col align-self-center"
@@ -79,6 +104,13 @@
                     </div>
                     <div class="container" id="ctn-sued">
                         <div id="sf-sued">
+                            <div id="handkarten-sued-0" class="cards">Handkarte</div>
+                            <div id="handkarten-sued-1" class="cards">Handkarte</div>
+                            <div id="handkarten-sued-2" class="cards">Handkarte</div>
+                            <div id="handkarten-sued-3" class="cards">Handkarte</div>
+                            <div id="handkarten-sued-4" class="cards">Handkarte</div>
+                            <div id="handkarten-sued-5" class="cards">Handkarte</div>
+                            <div id="handkarten-sued-6" class="cards">Handkarte</div>
                             hier werden karten aufgelegt...
                         </div>
                         <div class="row justify-content-center" id="sn-sued">
@@ -175,22 +207,22 @@
                 }
             });
             console.log(response);
-            if (response.ok){
+            if (response.ok) {
                 let result = await response.json();
                 console.log(result);
                 //alert(JSON.stringify(result));    // nur für Testzwecke
-                for (let property in result){
+                for (let property in result) {
                     console.log(result[property])
                 }
-                let startkarte = document.getElementById("sf-mitte");
-                startkarte = result.property;
+                //let startkarte = document.getElementById("sf-mitte");
+                //startkarte = result.property;
 
-                        // ++++++++++++++++++++++++ Wie greife ich jetzt auf die einzelnen Teile der Response zu?????? ++++++++++++++++++
+                // ++++++++++++++++++++++++ Wie greife ich jetzt auf die einzelnen Teile der Response zu?????? ++++++++++++++++++
             }
-            else{
+            else {
                 alert("HTTP-Error: " + response.status);
             }
-            
+
 
 
             $('#playerNames').modal('hide');
