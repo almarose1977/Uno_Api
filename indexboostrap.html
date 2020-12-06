@@ -36,7 +36,8 @@
                             </div>
                         </div>
 
-                        <div class="col-4"></div>
+                        <div class="col-4" id="activePlayer">Aktiver Spieler:</div>
+
 
                     </div>
                     <div class="container-fluid" id="ctn-west-mitte-ost">
@@ -149,6 +150,17 @@
         playersList.push(name3);
         playersList.push(name4);
 
+        let handkartenArray = []
+        handkartenArray.push(document.getElementById("sf-nord"));
+        handkartenArray.push(document.getElementById("sf-ost"));
+        handkartenArray.push(document.getElementById("sf-sued"));
+        handkartenArray.push(document.getElementById("sf-west"));
+
+        for (let i = 0; i < handkartenArray.length; i++){
+        console.log(handkartenArray[i].id);
+        }
+
+
 
         // Spielernamen Nord, Ost, Sued, West zuordnen
         let s1 = document.getElementById("sn-nord");
@@ -171,11 +183,17 @@
                 let result = await response.json();
                 console.log(result);
 
+                // StartGameResponse
                 let newGame = {};
                 newGame.Id = result.Id;
                 newGame.Players = result.Players;
                 newGame.NextPlayer = result.NextPlayer;
                 newGame.TopCard = result.TopCard;
+
+                let Players = {};
+                Players.Player = result.Players.Player;
+                Players.Cards = result.Players.Cards;
+                Players.Score = result.Players.Score;
 
                 let Card = {};
                 Card.Color = result.Color;
@@ -183,8 +201,8 @@
                 Card.Value = result.Value;
                 Card.Score = result.Score;
 
+                // Startkarte anzeigen
                 let startkarte = document.getElementById("sf-mitte_ablagestapel");
-
                 let img = new Image();
                 img.src = "images/cards/" + newGame.TopCard.Color + newGame.TopCard.Value + ".png";
                 img.height = 200;
@@ -193,38 +211,16 @@
 
                 console.log("Startkarte: ", startkarte);
 
-                // funktioniert:
-                // let HandkartenNord = document.getElementById("sf-nord");
-                // let hkn1 = new Image();
-                // hkn1.src = "images/cards/" + newGame.Players[0].Cards[0].Color + newGame.Players[0].Cards[0].Value + ".png";
-                // hkn1.height = 150;
-                // HandkartenNord.appendChild(hkn1);
-                // HandkartenNord = newGame.Players[0].Cards[0];
-
                 //für eine einzelne Karte
-                let karteN0 = document.createElement("div");
-                let hn0 = new Image();
-                hn0.src = "images/cards/" + newGame.Players[0].Cards[0].Color + newGame.Players[0].Cards[0].Value + ".png";
-                hn0.height = 200;
-                karteN0.appendChild(hn0);
-                document.getElementById("sf-nord").appendChild(karteN0);
-
-                let karteN1 = document.createElement("div");
-                let hn1 = new Image();
-                hn1.src = "images/cards/" + newGame.Players[2].Cards[2].Color + newGame.Players[2].Cards[2].Value + ".png";
-                hn1.height = 200;
-                karteN1.appendChild(hn1);
-                document.getElementById("sf-nord").appendChild(karteN1);
-
-                let karteN2 = document.createElement("div");
-                let hn2 = new Image();
-                hn2.src = "images/cards/" + newGame.Players[2].Cards[2].Color + newGame.Players[2].Cards[2].Value + ".png";
-                hn2.height = 200;
-                karteN2.appendChild(hn2);
-                document.getElementById("sf-nord").appendChild(karteN2);
+                // let karteN0 = document.createElement("div");
+                // let hn0 = new Image();
+                // hn0.src = "images/cards/" + newGame.Players[0].Cards[0].Color + newGame.Players[0].Cards[0].Value + ".png";
+                // hn0.height = 200;
+                // karteN0.appendChild(hn0);
+                // document.getElementById("sf-nord").appendChild(karteN0);
 
                 // für die ganzen Handkarten eines Spielers
-                //  for (let i = 0; i< 7; i++){
+                //  for (let i = 0; i< playersList.length; i++){
                 //     let kartenNord = document.createElement("div");
                 //     let img = new Image();
                 //     img.src = "images/cards/" + newGame.Players[i].Cards[i].Color + newGame.Players[i].Cards[i].Value + ".png";
@@ -233,8 +229,18 @@
                 //     document.getElementById("sf-nord").appendChild(kartenNord);               
                 //  }
 
-
-
+                // für die Handkarten aller Spieler
+                for (let i = 0; i < handkartenArray.length; i++) {
+                
+                    for (let j = 0; j < 7; j++) {
+                        let karte = document.createElement("div");
+                        let img = new Image();
+                        img.src = "images/cards/" + newGame.Players[i].Cards[j].Color + newGame.Players[i].Cards[j].Value + ".png";
+                        img.height = 100;
+                        karte.appendChild(img);
+                        document.getElementById(handkartenArray[i].id).appendChild(karte);
+                    }
+                }
 
             }
 
