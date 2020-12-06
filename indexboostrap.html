@@ -150,17 +150,11 @@
         playersList.push(name3);
         playersList.push(name4);
 
-        let handkartenArray = []
-        handkartenArray.push(document.getElementById("sf-nord"));
-        handkartenArray.push(document.getElementById("sf-ost"));
-        handkartenArray.push(document.getElementById("sf-sued"));
-        handkartenArray.push(document.getElementById("sf-west"));
-
-        for (let i = 0; i < handkartenArray.length; i++){
-        console.log(handkartenArray[i].id);
-        }
-
-
+        let handkartenElementNames = []
+        handkartenElementNames.push(document.getElementById("sf-nord").id);
+        handkartenElementNames.push(document.getElementById("sf-ost").id);
+        handkartenElementNames.push(document.getElementById("sf-sued").id);
+        handkartenElementNames.push(document.getElementById("sf-west").id);
 
         // Spielernamen Nord, Ost, Sued, West zuordnen
         let s1 = document.getElementById("sn-nord");
@@ -219,18 +213,8 @@
                 // karteN0.appendChild(hn0);
                 // document.getElementById("sf-nord").appendChild(karteN0);
 
-                // für die ganzen Handkarten eines Spielers
-                //  for (let i = 0; i< playersList.length; i++){
-                //     let kartenNord = document.createElement("div");
-                //     let img = new Image();
-                //     img.src = "images/cards/" + newGame.Players[i].Cards[i].Color + newGame.Players[i].Cards[i].Value + ".png";
-                //     img.height = 100;
-                //     kartenNord.appendChild(img);
-                //     document.getElementById("sf-nord").appendChild(kartenNord);               
-                //  }
-
                 // für die Handkarten aller Spieler
-                for (let i = 0; i < handkartenArray.length; i++) {
+                for (let i = 0; i < handkartenElementNames.length; i++) {
                 
                     for (let j = 0; j < 7; j++) {
                         let karte = document.createElement("div");
@@ -238,17 +222,19 @@
                         img.src = "images/cards/" + newGame.Players[i].Cards[j].Color + newGame.Players[i].Cards[j].Value + ".png";
                         img.height = 100;
                         karte.appendChild(img);
-                        document.getElementById(handkartenArray[i].id).appendChild(karte);
+                        document.getElementById(handkartenElementNames[i]).appendChild(karte);
                     }
                 }
 
+                // aktiven Spieler zuweisen
+                let aktiverSpieler = document.createElement("p")
+                aktiverSpieler.innerText = result.NextPlayer;
+                document.getElementById("activePlayer").appendChild(aktiverSpieler);
             }
 
             else {
                 alert("HTTP-Error: " + response.status);
             }
-
-
 
             $('#playerNames').modal('hide');
         }
