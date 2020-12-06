@@ -21,36 +21,18 @@
         <div class="img-container" id="img-uno">
             <div class="spielbrett">
 
-                <!-- <h1>Hallo Uno Spieler!</h1> -->
-
-                <!-- <h2>winke winke SWENGis</h2>
-
-            <div class="container-md">
-                <div class="alert alert-success" role="alert">
-                    Yaaay, willkommen zum Uno Spiel!
-                </div>
-            </div> -->
-
                 <div class="container-fluid">
                     <div class="row justify-content-start">
                         <div class="col-4" id="greeting">
                             <h1>Hallo Uno Spieler!</h1>
-                            <h2>winke winke SWENGis</h2>
+
                         </div>
 
                         <div class="col" id="ctn-nord">
-                            <div id="sn-nord">
-                                Name Nord
-                            </div>
+                            <div id="sn-nord"> Name Nord </div>
                             <div id="sf-nord">
-                                <div id="handkarten-nord-0" class="cards">Handkarte</div>
-                                <div id="handkarten-nord-1" class="cards">Handkarte</div>
-                                <div id="handkarten-nord-2" class="cards">Handkarte</div>
-                                <div id="handkarten-nord-3" class="cards">Handkarte</div>
-                                <div id="handkarten-nord-4" class="cards">Handkarte</div>
-                                <div id="handkarten-nord-5" class="cards">Handkarte</div>
-                                <div id="handkarten-nord-6" class="cards">Handkarte</div>
-                                hier werden karten aufgelegt...
+
+
                             </div>
                         </div>
 
@@ -64,36 +46,21 @@
                                 Name West
                             </div>
                             <div id="sf-west">
-                                <div id="handkarten-west-0" class="cards">Handkarte</div>
-                                <div id="handkarten-west-1" class="cards">Handkarte</div>
-                                <div id="handkarten-west-2" class="cards">Handkarte</div>
-                                <div id="handkarten-west-3" class="cards">Handkarte</div>
-                                <div id="handkarten-west-4" class="cards">Handkarte</div>
-                                <div id="handkarten-west-5" class="cards">Handkarte</div>
-                                <div id="handkarten-west-6" class="cards">Handkarte</div>
-                                hier werden karten aufgelegt...
+
                             </div>
                         </div>
                         <div id="sf-mitte_card_stack_new" class="cards" onclick="DrawCards();">
                             <img src="images/cards/back0.png" height="200px">
-                            hier wird der Kartenstapel aufgelegt...
+                            Nachziehstapel
                         </div>
                         <div id="sf-mitte_ablagestapel" class="cards">
-                            hier wird abgelegt
+                            Ablagestapel
                         </div>
-
-
 
                         <div class="container" id="ctn-ost">
 
                             <div id="sf-ost">
-                                <div id="handkarten-ost-0" class="cards">Handkarte</div>
-                                <div id="handkarten-ost-1" class="cards">Handkarte</div>
-                                <div id="handkarten-ost-2" class="cards">Handkarte</div>
-                                <div id="handkarten-ost-3" class="cards">Handkarte</div>
-                                <div id="handkarten-ost-4" class="cards">Handkarte</div>
-                                <div id="handkarten-ost-5" class="cards">Handkarte</div>
-                                <div id="handkarten-ost-6" class="cards">Handkarte</div>
+
                                 hier werden karten aufgelegt...
                             </div>
                             <div class="row justify-content-center align-items-center col align-self-center"
@@ -104,13 +71,7 @@
                     </div>
                     <div class="container" id="ctn-sued">
                         <div id="sf-sued">
-                            <div id="handkarten-sued-0" class="cards">Handkarte</div>
-                            <div id="handkarten-sued-1" class="cards">Handkarte</div>
-                            <div id="handkarten-sued-2" class="cards">Handkarte</div>
-                            <div id="handkarten-sued-3" class="cards">Handkarte</div>
-                            <div id="handkarten-sued-4" class="cards">Handkarte</div>
-                            <div id="handkarten-sued-5" class="cards">Handkarte</div>
-                            <div id="handkarten-sued-6" class="cards">Handkarte</div>
+
                             hier werden karten aufgelegt...
                         </div>
                         <div class="row justify-content-center" id="sn-sued">
@@ -187,9 +148,7 @@
         playersList.push(name2);
         playersList.push(name3);
         playersList.push(name4);
-        playersList.forEach(function (item, index, array) {
-            console.log(item, index);
-        });
+
 
         // Spielernamen Nord, Ost, Sued, West zuordnen
         let s1 = document.getElementById("sn-nord");
@@ -199,26 +158,86 @@
         document.getElementById("sn-west").innerText = name4;
 
         async function load() {
-            let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start", {   // await funktioniert nicht, F12: SyntaxError: await is only valid in async function
+
+            let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start", {
                 method: 'POST',
                 body: JSON.stringify(playersList),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
                 }
             });
-            console.log(response);
+
             if (response.ok) {
                 let result = await response.json();
                 console.log(result);
-                //alert(JSON.stringify(result));    // nur für Testzwecke
-                for (let property in result) {
-                    console.log(result[property])
-                }
-                //let startkarte = document.getElementById("sf-mitte");
-                //startkarte = result.property;
 
-                // ++++++++++++++++++++++++ Wie greife ich jetzt auf die einzelnen Teile der Response zu?????? ++++++++++++++++++
+                let newGame = {};
+                newGame.Id = result.Id;
+                newGame.Players = result.Players;
+                newGame.NextPlayer = result.NextPlayer;
+                newGame.TopCard = result.TopCard;
+
+                let Card = {};
+                Card.Color = result.Color;
+                Card.Text = result.Text;
+                Card.Value = result.Value;
+                Card.Score = result.Score;
+
+                let startkarte = document.getElementById("sf-mitte_ablagestapel");
+
+                let img = new Image();
+                img.src = "images/cards/" + newGame.TopCard.Color + newGame.TopCard.Value + ".png";
+                img.height = 200;
+                startkarte.appendChild(img);
+                startkarte = newGame.TopCard;
+
+                console.log("Startkarte: ", startkarte);
+
+                // funktioniert:
+                // let HandkartenNord = document.getElementById("sf-nord");
+                // let hkn1 = new Image();
+                // hkn1.src = "images/cards/" + newGame.Players[0].Cards[0].Color + newGame.Players[0].Cards[0].Value + ".png";
+                // hkn1.height = 150;
+                // HandkartenNord.appendChild(hkn1);
+                // HandkartenNord = newGame.Players[0].Cards[0];
+
+                //für eine einzelne Karte
+                let karteN0 = document.createElement("div");
+                let hn0 = new Image();
+                hn0.src = "images/cards/" + newGame.Players[0].Cards[0].Color + newGame.Players[0].Cards[0].Value + ".png";
+                hn0.height = 200;
+                karteN0.appendChild(hn0);
+                document.getElementById("sf-nord").appendChild(karteN0);
+
+                let karteN1 = document.createElement("div");
+                let hn1 = new Image();
+                hn1.src = "images/cards/" + newGame.Players[2].Cards[2].Color + newGame.Players[2].Cards[2].Value + ".png";
+                hn1.height = 200;
+                karteN1.appendChild(hn1);
+                document.getElementById("sf-nord").appendChild(karteN1);
+
+                let karteN2 = document.createElement("div");
+                let hn2 = new Image();
+                hn2.src = "images/cards/" + newGame.Players[2].Cards[2].Color + newGame.Players[2].Cards[2].Value + ".png";
+                hn2.height = 200;
+                karteN2.appendChild(hn2);
+                document.getElementById("sf-nord").appendChild(karteN2);
+
+                // für die ganzen Handkarten eines Spielers
+                //  for (let i = 0; i< 7; i++){
+                //     let kartenNord = document.createElement("div");
+                //     let img = new Image();
+                //     img.src = "images/cards/" + newGame.Players[i].Cards[i].Color + newGame.Players[i].Cards[i].Value + ".png";
+                //     img.height = 100;
+                //     kartenNord.appendChild(img);
+                //     document.getElementById("sf-nord").appendChild(kartenNord);               
+                //  }
+
+
+
+
             }
+
             else {
                 alert("HTTP-Error: " + response.status);
             }
