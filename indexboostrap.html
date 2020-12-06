@@ -62,7 +62,6 @@
 
                             <div id="sf-ost">
 
-                                hier werden karten aufgelegt...
                             </div>
                             <div class="row justify-content-center align-items-center col align-self-center"
                                 id="sn-ost">
@@ -73,7 +72,6 @@
                     <div class="container" id="ctn-sued">
                         <div id="sf-sued">
 
-                            hier werden karten aufgelegt...
                         </div>
                         <div class="row justify-content-center" id="sn-sued">
                             Name Sued
@@ -150,11 +148,11 @@
         playersList.push(name3);
         playersList.push(name4);
 
-        let handkartenElementNames = []
-        handkartenElementNames.push(document.getElementById("sf-nord").id);
-        handkartenElementNames.push(document.getElementById("sf-ost").id);
-        handkartenElementNames.push(document.getElementById("sf-sued").id);
-        handkartenElementNames.push(document.getElementById("sf-west").id);
+        let handkartenDivNames = []
+        handkartenDivNames.push(document.getElementById("sf-nord").id);
+        handkartenDivNames.push(document.getElementById("sf-ost").id);
+        handkartenDivNames.push(document.getElementById("sf-sued").id);
+        handkartenDivNames.push(document.getElementById("sf-west").id);
 
         // Spielernamen Nord, Ost, Sued, West zuordnen
         let s1 = document.getElementById("sn-nord");
@@ -214,15 +212,16 @@
                 // document.getElementById("sf-nord").appendChild(karteN0);
 
                 // für die Handkarten aller Spieler
-                for (let i = 0; i < handkartenElementNames.length; i++) {
+                for (let i = 0; i < handkartenDivNames.length; i++) {
                 
                     for (let j = 0; j < 7; j++) {
                         let karte = document.createElement("div");
+                        karte.setAttribute("class", "Handkarten"+i) // Class Attribut, falls wir es brauchen
                         let img = new Image();
                         img.src = "images/cards/" + newGame.Players[i].Cards[j].Color + newGame.Players[i].Cards[j].Value + ".png";
                         img.height = 100;
                         karte.appendChild(img);
-                        document.getElementById(handkartenElementNames[i]).appendChild(karte);
+                        document.getElementById(handkartenDivNames[i]).appendChild(karte);
                     }
                 }
 
@@ -230,6 +229,25 @@
                 let aktiverSpieler = document.createElement("p")
                 aktiverSpieler.innerText = result.NextPlayer;
                 document.getElementById("activePlayer").appendChild(aktiverSpieler);
+
+                // Score den einzelnen Spielern zuweisen
+                let spielerDivNames = [];
+                spielerDivNames.push(document.getElementById("ctn-nord").id);
+                spielerDivNames.push(document.getElementById("ctn-ost").id);
+                spielerDivNames.push(document.getElementById("ctn-sued").id);
+                spielerDivNames.push(document.getElementById("ctn-west").id);
+            
+                for (let i = 0; i < spielerDivNames.length; i++){
+                    let p = document.createElement("p");
+                    p.innerText = "Score";
+                    let score = document.createElement("div");
+                    score.innerText = newGame.Players[i].Score;
+                    score.setAttribute("id", "Score");  // id Attribut hinzugefügt
+                    
+                    document.getElementById(spielerDivNames[i]).appendChild(p).appendChild(score);
+                   
+                }
+
             }
 
             else {
