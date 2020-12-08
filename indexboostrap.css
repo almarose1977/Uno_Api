@@ -32,7 +32,11 @@
     }
     /* ctn - container */
     
-    #ctn-nord {
+    img {
+        float: left;
+    }
+    
+    img #ctn-nord {
         padding-top: 50px;
         display: flex;
         flex-direction: column;
