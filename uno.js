@@ -17,7 +17,7 @@ let spielerNamenArray = [];     // Spielernamen Array erstellen
 // Div-Namen der Handkarten der Spieler, um die Handkarten nachher auszuteilen
 let handkartenDivNames = [];
 
-// Dictionary/Map, um die Spielernamen-Divs mit den Spielernamen zu matchen --> drawCard
+// Dictionary/Map, um die Spielernamen-Divs mit den Spielernamen zu matchen --> drawCard: hier hab ich nur die Spielernamen zur Verfügung, brauch aber die entsprechende Id dazu
 let dictionary = {};
 let dictionaryReverse = {};
 
@@ -128,9 +128,10 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
             console.log("GameId: ", gameId);
 
             // Aktueller Spieler 
-            aktuellerSpieler = result.NextPlayer;       // NextPlayer ist nur der Name (String)
+            aktuellerSpieler = result.NextPlayer;       // NextPlayer ist nur der Name des Spielers (String)
             let p = document.createElement("p");
             p.innerText = aktuellerSpieler;
+            p.id = "hejhej";
             document.getElementById("activePlayer").appendChild(p);
 
             // STARTKARTE 
@@ -140,7 +141,6 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
             let img = new Image();
             img.src = "images/cards/" + topCard.Color + topCard.Value + ".png";
             img.height = 150;
-            //img.setAttribute("onclick", "drawCard(this.id)");
             startkarte.appendChild(img);
             startkarte = topCard;
 
@@ -228,6 +228,7 @@ async function drawCard() {
         document.getElementById(dictionaryReverse[aktuellerSpieler]).appendChild(karteNeu);
         
         aktuellerSpieler = result.NextPlayer;
+        document.getElementById("hejhej").innerText = aktuellerSpieler;
     }
 
     else {
