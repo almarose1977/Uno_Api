@@ -1,204 +1,218 @@
 "use strict";
 
-// $(document).ready(function () {
-//     $('#body').css('min-height', screen.height);
-//     // jQuery methods go here...
-// });
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Globale Variablen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// ++++++++++++++++++++++++++ Globale Variablen ++++++++++++++++++++++++++
+let gameId;         // Id des aktuellen Spiels
+let topCard;        // die oberste Karte am Ablegestapel
+let color;          // Farbe der ausgewählten Karte
+let value;          // Wert der Karte
 
-let gameId;
-let topCard;
-
-let aktuellerSpieler;
+let aktuellerSpieler;   // Name des aktuellen Spielers
+let punkte;             // Punktestand des Spielers
 
 let spielerNamenArray = [];     // Spielernamen Array erstellen
+let spielerIndex;
+
+let Spielerinnen;               // = result.Players
+
+let Karte = {};
 
 // Div-Namen der Handkarten der Spieler, um die Handkarten nachher auszuteilen
 let handkartenDivNames = [];
 
 // Dictionary/Map, um die Spielernamen-Divs mit den Spielernamen zu matchen --> drawCard: hier hab ich nur die Spielernamen zur Verfügung, brauch aber die entsprechende Id dazu
 let dictionary = {};
-let dictionaryReverse = {};
 
-//
+// Array der Spieler-Namen-Divs --> um den Score zuzuweisen
+let divNamesScore = [];
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
 // nur für Testzwecke, damit man nicht ständig die Namen eingeben muss
 let name1 = "Annie";
 let name2 = "Brandi";
-let name3 = "Carli";
+let name3 = "Charly";
 let name4 = "Debbie";
 // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //
 
-
-// Array der Spieler-Namen-Divs --> um den Score zuzuweisen
-let divNamesScore = [];
-divNamesScore.push(document.getElementById("score-nord").id);
-divNamesScore.push(document.getElementById("score-ost").id);
-divNamesScore.push(document.getElementById("score-sued").id);
-divNamesScore.push(document.getElementById("score-west").id);
-
-
-// Objekt Spielerin
-let Spielerinnen = {};
-
-// Objekt Karte
-let Karte = {};
 
 
 $('#playerNames').modal() // mit diesem aufruf wird der Inhalt des Modalen Dialogs angezeigt
 
 document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
-
+    
     evt.preventDefault(); // verhindert das Abschicken des post requests vom submit und damit das neuladen der seite (wollen nicht, dass beim uno die seite neu geladen wird)
     // hier kommt der code hin, der anstelle des post requests passieren soll
-
-    // die eingegebenen namen müssen in ein string array gespeichert werden, das ich dann der POST api/Game/Start übergeben
+    
+    
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // ++++++++++++++++++++++++++ für Testzwecke auskommentiert +++++++++++++++++++++++
-    // let name1 = document.getElementById("player1_id").value;
-    // let name2 = document.getElementById("player2_id").value;
-    // let name3 = document.getElementById("player3_id").value;
-    // let name4 = document.getElementById("player4_id").value;
+    // let name1 = document.getElementById("player1_id").value.toUpperCase();
+    // let name2 = document.getElementById("player2_id").value.toUpperCase();
+    // let name3 = document.getElementById("player3_id").value.toUpperCase();
+    // let name4 = document.getElementById("player4_id").value.toUpperCase();
+    
     // ++++++++++++++++++++++++++ für Testzwecke auskommentiert +++++++++++++++++++++++
-
+    
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
     document.getElementById("player1_id").value = name1;
     document.getElementById("player2_id").value = name2;
     document.getElementById("player3_id").value = name3;
     document.getElementById("player4_id").value = name4;
     // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
-
-    spielerNamenArray.push(name1, name2, name3, name4); // geht auch, anstelle einzeln eingeben
-
-    // Dictionary befüllen
-    dictionary[document.getElementById("sf-nord").id] = name1;
-    dictionary[document.getElementById("sf-ost").id] = name2;
-    dictionary[document.getElementById("sf-sued").id] = name3;
-    dictionary[document.getElementById("sf-west").id] = name4;
-
-    dictionaryReverse[name1] = document.getElementById("sf-nord").id;
-    dictionaryReverse[name2] = document.getElementById("sf-ost").id;
-    dictionaryReverse[name3] = document.getElementById("sf-sued").id;
-    dictionaryReverse[name4] = document.getElementById("sf-west").id;
+    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    // Spielernamen Vergleich
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    for(let key in dictionary) {
-        console.log(key + " : " + dictionary[key]);
-     }
-
-     for(let key in dictionaryReverse) {
-        console.log(key + " : " + dictionaryReverse[key]);
-     }
-
-
-    // Handkarten-DIV-Namen (sf-nord, sf-ost, sf-sued, sf-west)
-    handkartenDivNames.push(document.getElementById("sf-nord").id);
-    handkartenDivNames.push(document.getElementById("sf-ost").id);
-    handkartenDivNames.push(document.getElementById("sf-sued").id);
-    handkartenDivNames.push(document.getElementById("sf-west").id);
-
+    spielerNamenArray.push(name1, name2, name3, name4);
     
-
-    // Spielernamen Nord, Ost, Sued, West zuordnen
-    document.getElementById("sn-nord").innerText = name1;
-    document.getElementById("sn-ost").innerText = name2;
-    document.getElementById("sn-sued").innerText = name3;
-    document.getElementById("sn-west").innerText = name4;
-
-    // Spielfeld-Aufbau
-    async function spielfeldLaden() {
-
-        let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start", {
-            method: 'POST',
-            body: JSON.stringify(spielerNamenArray),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8'
-            }
-        });
-
-        if (response.ok) {
-            let result = await response.json();
-            console.log(result);
-
-            // ++++++++++++++++++++++++++++++++ StartGameResponse ++++++++++++++++++++++++++++++++++++++++++++++++
-            // GameId
-            gameId = result.Id;
-            console.log("GameId: ", gameId);
-
-            // Aktueller Spieler 
-            aktuellerSpieler = result.NextPlayer;       // NextPlayer ist nur der Name des Spielers (String)
-            let p = document.createElement("p");
-            p.innerText = aktuellerSpieler;
-            p.id = "hejhej";
-            document.getElementById("activePlayer").appendChild(p);
-
-            // STARTKARTE 
-            topCard = result.TopCard;           // Objekt: Color (String), Text (String), Value (enum), Score (int)
-
-            let startkarte = document.getElementById("sf-mitte_ablagestapel");      // Startkarte dem entsprechenden DIV zuweisen
-            let img = new Image();
-            img.src = "images/cards/" + topCard.Color + topCard.Value + ".png";
-            img.height = 150;
-            startkarte.appendChild(img);
-            startkarte = topCard;
-
-            // SPIELERINNEN 
-            Spielerinnen = result.Players;                  // Array aus 4 Player-Objekten: beinhaltet 
-            Spielerinnen.Player = result.Players.Player;    // den Spielernamen (.Player),
-            Spielerinnen.Cards = result.Players.Cards;      // das Handkarten-Array (.Cards) und
-            Spielerinnen.Score = result.Players.Score;      // den Punktestand (.Score)
-
-            // ZUM TESTEN
-            console.log("Spielerin 1: ", Spielerinnen[0]);
-            console.log("Spielerinnen-Name: ", Spielerinnen[0].Player);
-            console.log("Handkarten der Spielerin 1: ", Spielerinnen[0].Score);
-            console.log("Spielerinnen: ", Spielerinnen);
-            console.log("Karte 1 der Spielerin 2: ", Spielerinnen[1].Cards[0]);
-
-            // Karte.Color = result.Color;
-            // Karte.Text = result.Text;
-            // Karte.Value = result.Value;
-            // Karte.Score = result.Score;
-
-            // die Handkarten aller Spieler austeilen
-            for (let i = 0; i < handkartenDivNames.length; i++) {   // jedem Spieler
-
-                for (let j = 0; j < 7; j++) {                       // werden 7 Karten zugeteilt
-                    let kartenDiv = document.createElement("div");      // jede Karte wird ein eigenes div
-                    kartenDiv.setAttribute("class", "Handkarten_" + handkartenDivNames[i])   // Class Attribut, falls wir es brauchen
-                    let img = new Image();                          // jeder Karte wird ein Bild zugewiesen
-                    img.src = "images/cards/" + Spielerinnen[i].Cards[j].Color + Spielerinnen[i].Cards[j].Value + ".png";
-                    img.height = 90;
-                    img.setAttribute("id", "HK_" + handkartenDivNames[i] + j);  // jedes Karten-Image hat eine id
-                    img.setAttribute("onclick", "pick_Card(this.id)");    // beim Klick auf die Karte wird die Funktion pick_Card() aufgerufen
-                    kartenDiv.appendChild(img);
-                    document.getElementById(handkartenDivNames[i]).appendChild(kartenDiv);
-                }
-            }        
-
-            // SCORE den einzelnen Spielern zuweisen
-            for (let i = 0; i < divNamesScore.length; i++) {
-                
-                let scoreDiv = document.createElement("p");
-                scoreDiv.innerText = Spielerinnen[i].Score;
-
-                document.getElementById(divNamesScore[i]).appendChild(scoreDiv);
-            }
-        } else {
-            alert("HTTP-Error: " + response.status);
-        }
-        $('#playerNames').modal('hide');    // hier schließt sich der Modale Dialog
+    let checkedSpielerArray = spielerNamenArray.filter(function (name, index, array) {
+        return index === array.indexOf(name);
+    })
+    if (checkedSpielerArray.length < 4) {
+        alert("Bitte gib 4 eindeutige Namen ein! Danke! :)")
     }
-    spielfeldLaden();
+    else {
+        
+        spielerNamenArray = checkedSpielerArray;
+
+        // Dictionary befüllen: name wird der div.id zugewiesen
+        dictionary[name1] = document.getElementById("sf-nord").id;
+        dictionary[name2] = document.getElementById("sf-ost").id;
+        dictionary[name3] = document.getElementById("sf-sued").id;
+        dictionary[name4] = document.getElementById("sf-west").id;
+      
+
+        // Spielernamen den entsprechenden sn-Elementen zuweisen
+        document.getElementById("sn-nord").innerText = name1;
+        document.getElementById("sn-ost").innerText = name2;
+        document.getElementById("sn-sued").innerText = name3;
+        document.getElementById("sn-west").innerText = name4;
+
+        $('#playerNames').modal('hide');    // hier schließt sich der Modale Dialog
+        spielfeldLaden();
+    }
 });
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++ eine Karte vom Nachziehstapel ziehen +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// SPIELFELD-AUFBAU --> START
+// Body Parameters: die Namen der 4 Spieler (Collection of string)
+// response:    Id (Spiel-Id), 
+//              Players (Collection of PlayerResponse: 
+//                      Player (Spielername, string), 
+//                      Cards (Handkarten des Spielers, CardResponse), 
+//                      Score (Gesamtpunkteanzahl, int)), 
+//              NextPlayer (Spielername, string), 
+//              TopCard (CardResponse: Color (string), Text (textuelle Darstellung Kartenwert, string),Value (enum), Score (int))
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+async function spielfeldLaden() {
+
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/start", {
+        method: 'POST',
+        body: JSON.stringify(spielerNamenArray),
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
+    if (response.ok) {
+        let result = await response.json();
+        console.log(result);
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // Zuweisung der Response
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        gameId = result.Id;
+
+        // SPIELERINNEN 
+        Spielerinnen = result.Players;
+
+        // AKTUELLER SPIELER
+        aktuellerSpieler = result.NextPlayer;
+        let p = document.createElement("p");
+        p.innerText = aktuellerSpieler;
+        p.id = "aktuellerSpielerId";
+        document.getElementById("activePlayer").appendChild(p);
+
+        // STARTKARTE 
+        topCard = result.TopCard;
+        let startkarte = document.getElementById("sf-mitte_ablagestapel");      // Startkarte dem entsprechenden DIV zuweisen
+        let img = document.createElement("img");
+        img.src = "images/cards/" + topCard.Color + topCard.Value + ".png";
+        img.id = "startkarte";
+        img.height = 150;
+        startkarte.appendChild(img);
+        startkarte = topCard;
+
+        // HANDKARTEN
+        // Handkarten-DIV-Namen (sf-nord, sf-ost, sf-sued, sf-west)
+        handkartenDivNames.push(document.getElementById("sf-nord").id);
+        handkartenDivNames.push(document.getElementById("sf-ost").id);
+        handkartenDivNames.push(document.getElementById("sf-sued").id);
+        handkartenDivNames.push(document.getElementById("sf-west").id);
+
+
+        for (let i = 0; i < handkartenDivNames.length; i++) {               
+
+            for (let j = 0; j < 7; j++) {                                   
+                let kartenDiv = document.createElement("div");              // jede Karte wird zu einem eigenen div
+                kartenDiv.setAttribute("class", "Handkarten_" + handkartenDivNames[i])   // Class Attribut, falls wir es brauchen
+                kartenDiv.id = "HK_Div_" + handkartenDivNames[i] + j;
+                //kartenDiv.setAttribute("onclick", "getId(this.id)");
+                let img = document.createElement("img");                                     // jeder Karte wird ein Bild zugewiesen
+                img.src = "images/cards/" + Spielerinnen[i].Cards[j].Color + Spielerinnen[i].Cards[j].Value + ".png";
+                img.height = 90;
+                img.id = "HK_" + handkartenDivNames[i] + j;  // jedes Karten-Image hat eine id
+                img.setAttribute("onclick", "playCard()");    // beim Klick auf die Karte wird die Funktion playCard() aufgerufen
+                kartenDiv.appendChild(img);
+                document.getElementById(handkartenDivNames[i]).appendChild(kartenDiv);
+            }
+        }
+
+        // SCORE den einzelnen Spielern zuweisen
+        divNamesScore.push(document.getElementById("score-nord").id);
+        divNamesScore.push(document.getElementById("score-ost").id);
+        divNamesScore.push(document.getElementById("score-sued").id);
+        divNamesScore.push(document.getElementById("score-west").id);
+
+        for (let i = 0; i < divNamesScore.length; i++) {
+
+            punkte = document.createElement("p");
+            punkte.id = "punkteId_" + i;
+            punkte.innerText = Spielerinnen[i].Score;
+            document.getElementById(divNamesScore[i]).appendChild(punkte);
+        }
+    } 
+    // if response not ok:
+    else {
+        alert("HTTP-Error: " + response.status);
+    }
+};
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// DRAW CARD: eine Karte vom Nachziehstapel ziehen 
+// response:    NextPlayer (Spielername, string), 
+//              Player (Spielername, string),
+//              Card (abgehobene Karte, CardResponse:   Color (string), Text (textuelle Darstellung Kartenwert, string),
+//                                                      Value (enum), Score (int))
+// die zurückgegebene Karte wird den Handkarten des aktuellen Spielers hinzugefügt, der Score wird erhöht
+// der nächste Spieler ist an der Reihe
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 async function drawCard() {
-    // response: {"NextPlayer":"Brandi", "Player":"Annie","Card":{"Color":"Red","Text":"Five","Value":5,"Score":5}}
-    // die zurückgegebene Karte wird den Handkarten des aktuellen Spielers hinzugefügt
-    // der nächste Spieler ist an der Reihe
+
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/drawCard/" + gameId, {
         method: 'PUT',
         contentType: 'application/json',
@@ -206,74 +220,153 @@ async function drawCard() {
             'Content-type': 'application/json; charset=UTF-8'
         }
     });
-    
+
     if (response.ok) {
         let result = await response.json();
-        console.log(result);        
+        console.log(result);
         aktuellerSpieler = result.Player;
 
         // Anzahl der Handkarten des aktuellen Spielers --> brauchen wir, um die Id der Karten erhöhen zu können
-        let anzahlHandkarten = document.getElementsByClassName("Handkarten_"+ dictionaryReverse[aktuellerSpieler]).length;
-        
-        let karteNeu = document.createElement("div");      
-        karteNeu.setAttribute("class", "Handkarten_" + dictionaryReverse[aktuellerSpieler])   
-        let img = new Image();                          
+        let anzahlHandkarten = document.getElementsByClassName("Handkarten_" + dictionary[aktuellerSpieler]).length;
+
+        let karteNeu = document.createElement("div");
+        karteNeu.setAttribute("class", "Handkarten_" + dictionary[aktuellerSpieler])
+        let img = new Image();
         img.src = "images/cards/" + result.Card.Color + result.Card.Value + ".png";
         img.height = 90;
 
-        img.setAttribute("id", "HK_" + dictionaryReverse[aktuellerSpieler] + (anzahlHandkarten + 1));  // die Id des Image wird gesetzt
-        img.setAttribute("onclick", "pick_Card(this.id)");    
+        img.setAttribute("id", "HK_" + dictionary[aktuellerSpieler] + (anzahlHandkarten + 1));  // die Id des Image wird gesetzt
+        img.setAttribute("onclick", "playCard()");
         karteNeu.appendChild(img);
-        console.log("Was mach ich hier: ", dictionaryReverse[aktuellerSpieler]);
-        document.getElementById(dictionaryReverse[aktuellerSpieler]).appendChild(karteNeu);
-        
+        document.getElementById(dictionary[aktuellerSpieler]).appendChild(karteNeu);
+
+        // Score der Spieler aktualisieren
+        spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
+        punkte = Spielerinnen[spielerIndex].Score;
+        Spielerinnen[spielerIndex].Score = punkte + result.Card.Score;
+        document.getElementById("punkteId_" + spielerIndex).innerText = String(Spielerinnen[spielerIndex].Score);
+
+        // nächsten Spieler zum aktuellen Spieler machen
         aktuellerSpieler = result.NextPlayer;
-        document.getElementById("hejhej").innerText = aktuellerSpieler;
+        document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
     }
 
     else {
-        alert("HTTP-Error: " + response.status);
+        alert("Methode drawCards, HTTP-Error: " + response.status);
     }
 };
 
-// eine Karte aus dem Handkarten-Deck auswählen
-function pick_Card(card_id) {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// PLAY CARD
+// response:    Player (der Spieler, der nun an der Reihe ist, string), 
+//              Cards (Karten des Spielers, CardResponse:   Color (string), Text (textuelle Darstellung Kartenwert, string),
+//                                                          Value (enum), Score (int))
+//              Score (int, Gesamtpunktzahl aller seiner Handkarten)
+// die angeklickte Karte wird mit der TopCard verglichen
+// die angeklickte Karte soll auf den Ablagestapel gelegt werden --> TopCard ändert sich
+// die angeklickte Karte soll aus dem Handkarten-Array entfernt werden
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+async function playCard() {
 
-    // die angeklickte Karte soll auf den Ablagestapel gelegt werden --> TopCard ändert sich
-    // die angeklickte Karte soll aus dem Handkarten-Array entfernt werden
+    getTopCard();
+    getCards();
 
-    // console.log(Spielerinnen.Player.Cards(card_id));
-    alert("Hello again, gotcha!:)" + card_id);
+    let value = "2";
+    let color = "red";
+    let wildColor = "";
 
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/playCard/" + gameId + "?value=" + value + "&color=" + color + "&wildColor=" + wildColor, {
+        method: 'PUT',
+        contentType: 'application/json'
+
+    });
+
+    if (response.ok) {
+        let result = await response.json();
+        console.log(result);
+        aktuellerSpieler = result.Player;
+        console.log(aktuellerSpieler);
+
+
+    }
+    else {
+        alert("Methode playCards, HTTP-Error: " + response.status);
+    }
 };
 
-// // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Eine Karte spielen +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// async function play() {
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// GET TOPCARD
+// requested: gameId
+// response: Color (string), Text (string), Value (enum), Score (int)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//     document.get
-//     zuSpielendeKarte = {       // das ist ein JavaScript Objekt im Json Format
-//         id: newGame.id,
-//         value: newGame.Card.Value,
-//         color: newGame.Card.Color,
-//         //wildColor:
-//     };
+async function getTopCard() {
 
-//     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/PlayCard/{id}?value={value}&color={color}&wildColor={wildColor}", {
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/TopCard/" + gameId, {
+        method: 'GET',
+        contentType: 'application/json'
 
-//         method: 'PUT',
-//         body: JSON.stringify(zuSpielendeKarte),
-//         headers: {
-//             'Content-type': 'application/json; charset=UTF-8'
-//         }
-//     });
-//     if (response.ok) {
-//         let result = await response.json();
-//         console.log(result);
+    });
+
+    if (response.ok) {
+        let result = await response.json();
+        console.log(result);
+
+        color = result.Color;
+        value = result.Value;
+
+    }
+    else {
+        alert("Methode getTopCard, HTTP-Error: " + response.status);
+    }
+};
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// GETCARDS - um die Handkarten des aktuellen Spielers zu erhalten
+// requested: gameId, playerName (string)
+// response:    Player (der Spieler, der nun an der Reihe ist, string), 
+//              Cards (Karten des Spielers, CardResponse:   Color (string), Text (textuelle Darstellung Kartenwert, string),
+//                                                          Value (enum), Score (int))
+//              Score (Gesamtpunktzahl aller seiner Handkarten, int)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+async function getCards() {
+
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + gameId + "?playerName=" + aktuellerSpieler, {
+        method: 'GET',
+        contentType: 'application/json'
+
+    });
+
+    if (response.ok) {
+        let result = await response.json();
+        console.log(result);
+
+        color = result.Color;
+        value = result.Value;
+
+    }
+    else {
+        alert("Methode getCards, HTTP-Error: " + response.status);
+    }
+};
+
+// von Vali
+// function getId(clickedId) {
+//     let cardVal = document.getElementById(clickedId);
+//     console.log("Die Id vom Div ", clickedId);
+//     console.log("Akt. Spieler ", aktuellerSpieler);
+//     spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
+//     console.log("Spielerindex: " , spielerIndex);
+//     console.log(cardVal);
+//     // check ob von richtiger Kartenhand gespielt:
+//     if(spielerIndex == clickedId.charAt(0)){
+//         alert(clickedId);
+//     } else {
+//         alert("Falsche Kartenhand!")
 //     }
-//     else {
-//         alert("HTTP-Error: " + response.status);
-//     }
-// }
-// play();
+//}
 
+
+//da hab ich das in der karte:
+//cardDiv.setAttribute("onclick", "getId(this.id)");
 
