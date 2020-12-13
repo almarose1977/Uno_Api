@@ -1,0 +1,38 @@
+Nr.	Anforderung – Das Unosystem …	Status	Hinweise
+1	muss den SpielerInnen die Möglichkeit bieten 4 Namen einzugeben:		(erledigt)
+2	muss gleiche SpielerInnen Namen verhindern:                     		(erledigt)
+3	muss alle Karten aller SpielerInnen darstellen.		                    (erledigt)
+
+4	muss nach einer SpielerInnen Aktion etwaige neue Karten darstellen bzw. alte Karten entfernen.		
+
+5	muss alle Namen aller SpielerInnen darstellen.		                    (erledigt)
+6	muss die Punkte aller SpielerInnen darstellen.		                    (erledigt)
+
+7	muss nach einer SpielerInnen Aktion etwaige Punkteveränderungen darstellen.		Teilweise, hinzu passt, abziehen fehlt
+
+8	muss aktive/n SpielerIn visuell hervorheben.		                    (erledigt)
+9	muss die aufgedeckte Karte darstellen.		                            (erledigt)
+10	muss den Abhebestapel darstellen.		                                (erledigt)
+11	muss für die aktive Spielerin/den aktiven Spieler die Möglichkeit bieten eine Karte zu spielen.		(erledigt)
+
+12	muss das Spielen einer Karte animieren.		
+
+13	muss nach dem Spielen einer Karte die aufgedeckte Karte aktualisieren.		
+
+14	muss für die aktive Spielerin/den aktiven Spieler die Möglichkeit bieten eine Karte abzuheben.		(erledigt)
+15	muss das Abheben einer Karte animieren.		
+16	muss ungültige Aktionen animieren.		
+17	muss das Spiel beenden und SiegerIn visualisieren, wenn eine Person keine Karten mehr besitzt.		
+18	muss die Wahl einer Farbe erlauben, wenn eine Uno Sonderkarte gespielt wurde.		
+19	muss die gewählte Farbe nach einer Farbwahl visualisieren.		
+20	soll unnötige Anfragen an den Server verhindern. (z.B. Falsche Karte gespielt, nicht aktive SpielerIn versucht Karte zu spielen)		
+    [Nur die Farbe muss passen oder der Wert, + der richtige Spieler muss gewählt sein  3 if‘s]
+21	soll nett aussehen 		
+
+
+Alle weiteren Anforderungen sind KANN und sollten erst danach umgesetzt werden:
+•	Weitere Animationen
+•	Weiteres *bling bling* Aussehen
+•	Uno Ruf Funktionalität
+•	Spielregeln anzeigen
+•	Knöpfe um Spiel erneut zu starten
