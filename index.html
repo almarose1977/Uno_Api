@@ -29,8 +29,8 @@
 
                         <div class="col" id="ctn-nord">
                             <div id="sn-nord"> Name Nord </div>
-                            <div id="sf-nord"></div>
-                            <div id="score-nord">Score: </div>
+                            <div id="nord"></div>                <!-- Div-Namen geändert, damit's a bissi einfacher ist!!!! -->
+                            <div class="punkte" id="score-nord">Score: </div>
                         </div>
 
                         <div class="col-4" id="activePlayer">Aktueller Spieler:</div>
@@ -42,8 +42,8 @@
                             <div class="row justify-content-start align-items-center col align-self-center" id="sn-west">
                                 Name West
                             </div>
-                            <div id="sf-west"></div>
-                            <div id="score-west">Score: </div>
+                            <div id="west"></div>
+                            <div class="punkte" id="score-west">Score: </div>
                         </div>
                         <div id="sf-mitte_card_stack_new" title= "Ziehe eine Karte, du süßes Ding!" class="cards" onclick="drawCard();">
                             <img src="images/cards/back0.png" height="150px"> Nachziehstapel
@@ -54,16 +54,16 @@
 
                         <div class="container" id="ctn-ost">
 
-                            <div id="score-ost">Score: </div>
-                            <div id="sf-ost"></div>
+                            <div class="punkte" id="score-ost">Score: </div>
+                            <div id="ost"></div>
                             <div class="row justify-content-center align-items-center col align-self-center" id="sn-ost">
                                 Name Ost
                             </div>
                         </div>
                     </div>
                     <div class="container" id="ctn-sued">
-                        <div id="score-sued">Score: </div>
-                        <div id="sf-sued"> </div>
+                        <div class="punkte" id="score-sued">Score: </div>
+                        <div id="sued"> </div>
                         <div class="row justify-content-center" id="sn-sued">
                             Name Sued
                         </div>
@@ -71,7 +71,7 @@
                 </div>
             </div>
 
-            <!-- hier fängt modal dialog an-->
+            <!-- hier fängt modal dialog der player an-->
             <div class="modal fade" id="playerNames" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
                 <form id="playerNamesForm">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -93,6 +93,33 @@
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary" id="playerNamesSubmit">UNO Spiel
                                     starten</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- hier fängt modal dialog der Farbvergabe an-->
+            <div class="modal fade" id="wildCardNames" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+                <form id="wildCardForm">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Bitte such dir eine Farbe aus:</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <button type="submit" class="form-control" id="rot">ROT</button>
+                                    <br>
+                                    <button type="submit" class="form-control" id="blau">BLAU</button>
+                                    <br>
+                                    <button type="submit" class="form-control" id="gruen">GRUEN</button>
+                                   <br>
+                                   <button type="submit" class="form-control" id="gelb">GELB</button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            
                             </div>
                         </div>
                     </div>
