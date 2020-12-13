@@ -72,7 +72,7 @@
         /*opacity: 70%;*/
     }
     
-    #sf-nord {
+    #nord {
         background-color: lightgreen;
         padding: 20px;
         justify-content: center;
@@ -109,7 +109,7 @@
         transform: rotate(270deg);
     }
     
-    #sf-west {
+    #west {
         background-color: lightgoldenrodyellow;
         padding: 20px;
         border-radius: 18px;
@@ -139,7 +139,7 @@
         justify-content: flex-end;
     }
     
-    #sf-ost {
+    #ost {
         background-color: lightskyblue;
         padding: 20px;
         border-radius: 18px;
@@ -169,7 +169,7 @@
         margin-top: 18px;
     }
     
-    #sf-sued {
+    #sued {
         background-color: lightcoral;
         padding: 20px;
         border-radius: 18px;
