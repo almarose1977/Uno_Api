@@ -12,7 +12,7 @@ let wildColor;       //
 let img;
 
 let aktuellerSpieler;   // Name des aktuellen Spielers
-let punkte;             // Punktestand des Spielers
+let spielerPunkte;             // Punktestand des Spielers
 
 let spielerNamenArray = [];     // Spielernamen Array erstellen
 let spielerIndex;
@@ -127,7 +127,7 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
 //              Players (Collection of PlayerResponse: 
 //                      Player (Spielername, string), 
 //                      Cards (Handkarten des Spielers, CardResponse), 
-//                      Score (Gesamtpunkteanzahl, int)), 
+//                      Score (Gesamtpunkteanzahl des Spielers, int)), 
 //              NextPlayer (Spielername, string), 
 //              TopCard (CardResponse: Color (string), Text (textuelle Darstellung Kartenwert, string),Value (enum), Score (int))
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -176,57 +176,108 @@ async function spielfeldLaden() {
         handkartenDivNames.push(document.getElementById("sued").id);
         handkartenDivNames.push(document.getElementById("west").id);
 
-        handKarten = getCards();
-
         for (let i = 0; i < handkartenDivNames.length; i++) {
-            createCardImage(i);
+            createFirstHandCards(i);
         }
 
         // SCORE den einzelnen Spielern zuweisen
-        divNamesScore.push(document.getElementById("score-nord").id);
-        divNamesScore.push(document.getElementById("score-ost").id);
-        divNamesScore.push(document.getElementById("score-sued").id);
-        divNamesScore.push(document.getElementById("score-west").id);
-
-        for (let i = 0; i < divNamesScore.length; i++) {
-
-            punkte = document.createElement("p");
-            punkte.id = "punkteId_" + i;
-            punkte.innerText = Spielerinnen[i].Score;
-            document.getElementById(divNamesScore[i]).appendChild(punkte);
-        }
+        playerScore();
     }
     // if response not ok:
     else {
         alert("HTTP-Error: " + response.status);
     }
-    // console.log("handKarten in spielfeldaufbau",handKarten);
+
     topCard = getTopCard();
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//! Hilfsfunktion, um die Bilder den Karten zuzuweisen
+//! Hilfsfunktion, um den Spielern ihren Punktestand zuzuweisen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-function createCardImage(i) {
+function playerScore() {
 
-    for (let j = 0; j < Spielerinnen[i].Cards.length; j++) {        // die Anzahl der Karten für jede Spielerin kann anders sein (+2 oder +4)
+    divNamesScore.push(document.getElementById("score-nord").id);
+    divNamesScore.push(document.getElementById("score-ost").id);
+    divNamesScore.push(document.getElementById("score-sued").id);
+    divNamesScore.push(document.getElementById("score-west").id);
 
-        let kartenDiv = document.createElement("div");              // jede Karte wird zu einem eigenen div
-        kartenDiv.setAttribute("class", "Handkarten_" + handkartenDivNames[i])   // Class Attribut, falls wir es brauchen
-        kartenDiv.id = handkartenDivNames[i] + j;
-        img = document.createElement("img");                                     // jeder Karte wird ein Bild zugewiesen
-        img.src = "images/cards/" + Spielerinnen[i].Cards[j].Color + Spielerinnen[i].Cards[j].Value + ".png";
-        img.height = 90;
-        img.id = handkartenDivNames[i] + j;  // jedes Karten-Image hat eine id
-        // console.log("image.id", img.id);
-        img.setAttribute("onclick", "playCard(this.id)");    // beim Klick auf die Karte wird die Funktion playCard() aufgerufen
-        kartenDiv.appendChild(img);
-        document.getElementById(handkartenDivNames[i]).appendChild(kartenDiv);
-        // document.getElementById(handkartenDivNames[i]+j).addEventListener("click", playCard()); // todo funktioniert nicht (this ist problem)
+    for (let i = 0; i < divNamesScore.length; i++) {
+        spielerPunkte = document.createElement("p");
+        spielerPunkte.id = "spielerPunkteId_" + i;
+        spielerPunkte.innerText = Spielerinnen[i].Score;
+        document.getElementById(divNamesScore[i]).appendChild(spielerPunkte);
     }
 }
 
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! Hilfsfunktion, um die Karten zu Beginn des Spiels zu erzeugen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+function createFirstHandCards(spielerIndex) {
+
+    for (let j = 0; j < Spielerinnen[spielerIndex].Cards.length; j++) {        // die Anzahl der Karten für jede Spielerin kann anders sein (+2 oder +4)
+        let kartenFarbe = Spielerinnen[spielerIndex].Cards[j].Color;
+        let kartenWert = Spielerinnen[spielerIndex].Cards[j].Value;
+
+        createCardImage(spielerIndex, j, kartenFarbe, kartenWert);
+    }
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! Hilfsfunktion, um die Bilder den Karten zuzuweisen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+function createCardImage(spielerIndex, j, kartenFarbe, kartenWert) {
+
+    let kartenDiv = document.createElement("div");
+    kartenDiv.setAttribute("class", "Handkarten_" + handkartenDivNames[spielerIndex])   // Class Attribut, falls wir es brauchen
+    kartenDiv.id = handkartenDivNames[spielerIndex] + j;
+    img = document.createElement("img");
+    img.src = "images/cards/" + kartenFarbe + kartenWert + ".png";
+    img.height = 90;
+    img.id = handkartenDivNames[spielerIndex] + j;
+    img.setAttribute("onclick", "playCard(this.id)");
+    kartenDiv.appendChild(img);
+    document.getElementById(handkartenDivNames[spielerIndex]).appendChild(kartenDiv);
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! Hilfsfunktion, um die Karten nach dem Löschen wieder aufbauen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+async function createCardsAfterDelete(spielerIndex) {
+    handKarten = await getCards();
+    for (let j = 0; j < handKarten.length; j++) {
+        let kartenFarbe = handKarten[j].Color;
+        let kartenWert = handKarten[j].Value;
+
+        createCardImage(spielerIndex, j, kartenFarbe, kartenWert);
+
+    }
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! Warum werden die Handkarten nach dem Ziehen einer neuen Karte gelöscht und wiederaufgebaut:
+// ich wollte jede hinzugekommene Karte aus der drawCard() einfach an das letzte Div des Spielers anhängen mit einem
+// fortlaufenden Index (nach nord6 kommt nord7).
+// Allerdings schicken wir diese Info nicht an den Server retour. Um die aktuellen Handkarten des Spielers zu erhalten,
+// muss die getCards() aufgerufen werden. Hier ist die gezogene Karte jedoch in den Handkarten nach Farbreihenfolge 
+// rot, gelb, grün, blau, scharz und aufsteigend nach Kartenwert einsortiert. 
+// Deshalb ist der Index der Karte ein anderer als die Id des Karten-Images!!!!!!
+// Lösung: die Handkarten werden zuerst komplett gelöscht und dann mit der aktuellen Kartenhand wieder aufgebaut!
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! Hilfsfunktion, um die kompletten Handkarten zu löschen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+function deleteHandcardDeck(aktuellerSpieler) {
+
+    let HKzuLoeschen = document.getElementById(dictionary[aktuellerSpieler]);
+    console.log((HKzuLoeschen));
+    while (HKzuLoeschen.firstChild) {
+        HKzuLoeschen.removeChild(HKzuLoeschen.firstChild);
+    }
+}
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // !DRAW CARD: eine Karte vom Nachziehstapel ziehen 
 // response:    NextPlayer (der Spielername, der als nächstes an der Reihe ist, string), 
@@ -252,19 +303,14 @@ async function drawCard() {
         console.log(result);
         aktuellerSpieler = result.Player;
 
-        // Anzahl der Handkarten des aktuellen Spielers --> brauchen wir, um die Id der Karten erhöhen zu können
-        let anzahlHandkarten = document.getElementsByClassName("Handkarten_" + dictionary[aktuellerSpieler]).length;
+        let karte = result.Card;
+        console.log("neue Karte", karte);
 
-        let karteNeu = document.createElement("div");
-        karteNeu.setAttribute("class", "Handkarten_" + dictionary[aktuellerSpieler])
-        let img = document.createElement("img");
-        img.src = "images/cards/" + result.Card.Color + result.Card.Value + ".png";
-        img.height = 90;
+        spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
 
-        img.id = dictionary[aktuellerSpieler] + (anzahlHandkarten + 1);
-        img.setAttribute("onclick", "playCard(this.id)");
-        karteNeu.appendChild(img);
-        document.getElementById(dictionary[aktuellerSpieler]).appendChild(karteNeu);
+        deleteHandcardDeck(aktuellerSpieler);
+
+        createCardsAfterDelete(spielerIndex);
 
         // Score der Spieler aktualisieren
         spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
@@ -286,7 +332,7 @@ async function drawCard() {
 // !PLAY CARD
 // request Info: gameId, Kartenfarbe, Kartenwert und Wildcard --> es wird kein Spieler übergeben!!!!!!!!!! --> muss über die Id der Karten gehen
 // response:    Player (der Spieler, der nach dem Spielzug dran ist (wenn Annie die Karte spielt ist der Player Brandi), string), 
-//              Cards (Karten des Spielers, CardResponse:   Color (string), Text (textuelle Darstellung Kartenwert, string),
+//              Cards (Karten des Spielers, der als nächstes dran ist, CardResponse:   Color (string), Text (textuelle Darstellung Kartenwert, string),
 //                                                          Value (enum), Score (int))
 //              Score (int, Gesamtpunktzahl aller seiner Handkarten)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -295,51 +341,65 @@ async function playCard(cardId) {
     // 1. prüfen, ob die Karte, die angeklickt wurde, vom richtigen Spieler kommt --> correctPlayer(cardId)
     // 2. wenn sie vom richtigen Spieler kommt, Farbe und Wert auslesen --> getCardInformation(cardId)
     // 3. überprüfen, ob sie gespielt werden darf --> mit topCard vergleichen --> checkCardWithTopCard(cardId)
-    // 4. die gespielte Karte aus den Handkarten entfernen --> deleteCardFromHandDeck(cardId)
-    // 5. die Punkte des Spielers reduzieren
-    // 6. die gespielte Karte wird zur TopCard --> replaceTopCard();
+    // 4. die gespielte Karte wird zur TopCard --> replaceTopCard();
+    // 5. die restlichen Handkarten-Elemnte löschen --> deleteHandcardDeck(aktuellerSpieler)
+    // 6. die "neuen" HK ohne die gespielte Karte wieder aufbauen lassen --> createCardsAfterDelete(spielerIndex)
+    // 7. die spielerPunkte des Spielers reduzieren
+    //  
 
-    console.log("aktuellerSpieler ganz am Anfang der playCard", aktuellerSpieler);
+
     if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
         console.log("Falscher Spieler ausgewählt");
     }
     else {
-        checkCardWithTopCard(cardId);
+        if (await checkCardWithTopCard(cardId)) { //? ich muss auf die Antwort von checkCardWithTopCard warten, bevor es weitergehen kann
 
 
-        let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/playCard/" + gameId + "?value=" + wert + "&color=" + farbe + "&wildColor=" + wildColor, {
-            method: 'PUT',
-            contentType: 'application/json'
+            let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/playCard/" + gameId + "?value=" + wert + "&color=" + farbe + "&wildColor=" + wildColor, {
+                method: 'PUT',
+                contentType: 'application/json'
 
-        });
+            });
 
 
-        if (response.ok) {
-            let result = await response.json();
-            console.log("Result aus playCard()", result);
+            if (response.ok) {
+                let result = await response.json();
+                // console.log("Result aus playCard()", result);
 
-            deleteCardFromHandDeck(cardId);
-        
-            getCards();
-            
-            replaceTopCard();
-            
+                spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
 
-            // nächsten Spieler zum aktuellen Spieler machen
-            aktuellerSpieler = result.Player;
-            document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
-        
-            getCards();     //! hier muss unbedingt nochmal die getCards() aufgerufen werden, damit die Karten vom aktuellen Spieler verwendet werden,
-                            //! ansonsten werden immer die Karten vom 1. Spieler verwendet
-                            //! wir geben der API ja nix retour, wenn wir eine Änderung an den Handkarten vornehmen
-            
+                replaceTopCard(cardId);
 
+                deleteHandcardDeck(aktuellerSpieler);
+
+                createCardsAfterDelete(spielerIndex);
+
+                //!-------------------------------------------------------------------------------------------------------------
+                // ! wie kann ich auf meherere Ergebnisse einer response zugreifen???? es wird ja nur der return-Wert zurückgegeben
+                // ! brauche aus der getCards sowohl die Handkarten, aber hier brauche ich die Spielerpunkte
+                // Score des Spielers aktualisieren
+                spielerPunkte = await getCards();
+                console.log("Spielerpunkte: ", spielerPunkte);
+                
+                document.getElementById("spielerPunkteId_" + spielerIndex).innerText = String(spielerPunkte);
+                //!-------------------------------------------------------------------------------------------------------------
+
+                // nächsten Spieler zum aktuellen Spieler machen
+                aktuellerSpieler = result.Player;
+                document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
+
+            }
+            else {
+                alert("Methode playCards, HTTP-Error: " + response.status);
+            }
         }
         else {
-            alert("Methode playCards, HTTP-Error: " + response.status);
+            console.log("Falsche Karte ausgewählt.");
+            alert("Falsche Karte ausgewählt!")
         }
+
     }
-    
+
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -351,12 +411,7 @@ async function playCard(cardId) {
 function deleteCardFromHandDeck(cardId) {
 
     zuloeschendeKarte = document.getElementById(cardId).firstChild;
-    // console.log("CardId", cardId);
-    // console.log("zulöschende Karte: ", zuloeschendeKarte);
-    // console.log("Parent von zulöschendeKarte", zuloeschendeKarte.parentElement);
     zuloeschendeKarte.parentElement.removeChild(zuloeschendeKarte);
-    // console.log("akutellerSpieler aus deleteCardFromHandDeck", akutellerSpieler);
-
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -365,13 +420,13 @@ function deleteCardFromHandDeck(cardId) {
 // ich verwende das image aus deleteCardFromHandDeck von oben, um es der "neuen" Topkarte zuzuweisen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-function replaceTopCard() {
+function replaceTopCard(cardId) {
+
+    deleteCardFromHandDeck(cardId);
 
     let alteStartkarte = document.getElementById("startkarte").lastChild;
-    // console.log("alte Startkarte: ", alteStartkarte);
     img = zuloeschendeKarte;
     img.height = 150;                                                               // TopCard ist größer als Handkarte
-    // console.log("Image: ", img);
     document.getElementById("startkarte").replaceChild(img, alteStartkarte);
 
 }
@@ -387,10 +442,12 @@ function correctPlayer(cardId) {    //! die Methode funktioniert, ist richtig
 
     let nameAusId = document.getElementById(cardId).parentElement.id;
 
-    if (nameAusId == dictionary[aktuellerSpieler]) {                  // aktuellerSpieler = "Annie"
+    if (nameAusId == dictionary[aktuellerSpieler]) {
+        console.log(nameAusId, " ist richtig");                 // aktuellerSpieler = "Annie"
         return true;
     }
     else {
+        console.log(nameAusId, " ist falsch");
         return false;
     }
 }
@@ -399,22 +456,21 @@ function correctPlayer(cardId) {    //! die Methode funktioniert, ist richtig
 // !HILFSFUNKTION checkCardWithTopCard, um die Farbe und den Wert der zu spielenden Karte mit der TopCard zu vergleichen
 // der Vergleich, ob die Karte vom richtigen Spieler kommt, passiert bereits davor in correctPlayer(cardId)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function checkCardWithTopCard(cardId) {
+async function checkCardWithTopCard(cardId) {
 
+    await getTopCard();     // muss die aktuelle TopCard abfragen, weil im HTML wird zwar eine TopCard angezeigt, aber mit der ID der Karte, die drauf gelegt wurde
     let farbeTC = topCard.Color;
     let wertTC = topCard.Value;
 
-    getCardInformation(cardId);
+    await getCardInformation(cardId);   //? ich muss auf die Antwort von getCardInformation warten, bevor es weiter geht
 
     if (farbe == farbeTC || wert == wertTC) {
         console.log("Farbe oder Wert passt");
-        // console.log("Farbe der Karte", farbe);
-        // console.log("Wert der Karte", wert);
+        return true;
     }
     else {
         console.log("Farbe oder Wert passen nicht");
-        console.log("Farbe der Karte", farbe);
-        console.log("Wert der Karte", wert);
+        return false;
     }
 
 }
@@ -430,19 +486,16 @@ function checkCardWithTopCard(cardId) {
 // .charAt(cardId.length-1) ==> kartenIndex = 2 
 // da nicht alle cardId-Strings der einzelnen Spieler gleich groß sind (z.B. "ost2" hat nur eine Länge von 4) kann ich keinen
 // fixen Index angeben (z.B. .charAt(4) würde für "ost2" nicht funktionieren)
-// mit diesem Index kann ich dann die Handkarte im Array bestimmen und davon die Farbe und den Wert
+//! mit diesem Index kann ich dann die Handkarte im Array bestimmen und davon die Farbe und den Wert
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function getCardInformation(cardId) {
+async function getCardInformation(cardId) {
 
-    let kartenIndex = cardId.charAt(cardId.length - 1);     
-    console.log("kartenIndex", kartenIndex);
-    // console.log("CardId", cardId);
-    console.log("handkarten in getCardInformation", handKarten);
+    handKarten = await getCards();
+    let kartenIndex = cardId.charAt(cardId.length - 1);
     farbe = handKarten[kartenIndex].Color;
     wert = handKarten[kartenIndex].Value;
     wildColor = handKarten[kartenIndex].Value;
-    //todo: wenn eine Karte aus dem HK-Array bereits gespielt wurde, verringert sich die Größe des Arrays, 
-    //todo: damit wird die falsche Karte ausgespielt
+    console.log("Farbe aus getCardInformation:", farbe);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -490,8 +543,15 @@ async function getCards() {
 
     if (response.ok) {
         let result = await response.json();
-
         handKarten = result.Cards;
+        spielerPunkte = result.Score;
+        console.log("HandkartenspielerPunkte", spielerPunkte);
+
+        // aktuellerSpieler = result.Player;
+        // spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
+        // console.log("getCards", handKarten);
+        // createCardImage(spielerIndex);
+        return handKarten;
     }
     else {
         alert("Methode getCards, HTTP-Error: " + response.status);
