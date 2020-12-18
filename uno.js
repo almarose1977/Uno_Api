@@ -33,6 +33,8 @@ let dictionaryIdName = {}; // um aus der KartenId zum Spielernamen zu kommen
 // Array der Spieler-Namen-Divs --> um den Score zuzuweisen
 let divNamesScore = [];
 
+let getCardsResponse;
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
 // nur für Testzwecke, damit man nicht ständig die Namen eingeben muss
@@ -247,7 +249,10 @@ function createCardImage(spielerIndex, j, kartenFarbe, kartenWert) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 async function createCardsAfterDelete(spielerIndex) {
-    handKarten = await getCards();
+    getCardsResponse = await getCards();
+    handKarten = getCardsResponse.Cards;
+
+
     for (let j = 0; j < handKarten.length; j++) {
         let kartenFarbe = handKarten[j].Color;
         let kartenWert = handKarten[j].Value;
@@ -313,10 +318,7 @@ async function drawCard() {
         createCardsAfterDelete(spielerIndex);
 
         // Score der Spieler aktualisieren
-        spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
-        punkte = Spielerinnen[spielerIndex].Score;
-        Spielerinnen[spielerIndex].Score = punkte + result.Card.Score;
-        document.getElementById("punkteId_" + spielerIndex).innerText = String(Spielerinnen[spielerIndex].Score);
+        updateScore();
 
         // nächsten Spieler zum aktuellen Spieler machen
         aktuellerSpieler = result.NextPlayer;
@@ -344,9 +346,7 @@ async function playCard(cardId) {
     // 4. die gespielte Karte wird zur TopCard --> replaceTopCard();
     // 5. die restlichen Handkarten-Elemnte löschen --> deleteHandcardDeck(aktuellerSpieler)
     // 6. die "neuen" HK ohne die gespielte Karte wieder aufbauen lassen --> createCardsAfterDelete(spielerIndex)
-    // 7. die spielerPunkte des Spielers reduzieren
-    //  
-
+    // 7. die spielerPunkte des Spielers reduzieren --> updateScore()
 
     if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
         console.log("Falscher Spieler ausgewählt");
@@ -374,15 +374,7 @@ async function playCard(cardId) {
 
                 createCardsAfterDelete(spielerIndex);
 
-                //!-------------------------------------------------------------------------------------------------------------
-                // ! wie kann ich auf meherere Ergebnisse einer response zugreifen???? es wird ja nur der return-Wert zurückgegeben
-                // ! brauche aus der getCards sowohl die Handkarten, aber hier brauche ich die Spielerpunkte
-                // Score des Spielers aktualisieren
-                spielerPunkte = await getCards();
-                console.log("Spielerpunkte: ", spielerPunkte);
-                
-                document.getElementById("spielerPunkteId_" + spielerIndex).innerText = String(spielerPunkte);
-                //!-------------------------------------------------------------------------------------------------------------
+                updateScore();
 
                 // nächsten Spieler zum aktuellen Spieler machen
                 aktuellerSpieler = result.Player;
@@ -395,12 +387,23 @@ async function playCard(cardId) {
         }
         else {
             console.log("Falsche Karte ausgewählt.");
-            alert("Falsche Karte ausgewählt!")
+            alert("Falsche Karte ausgewählt!")  //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
         }
-
     }
-
 };
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! Funktion, um Punkte der Kartnhand zu aktualisieren
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+async function updateScore() {
+
+    getCardsResponse = await getCards();
+    spielerPunkte = getCardsResponse.Score;
+    // console.log("Spielerpunkte: ", spielerPunkte);
+    document.getElementById("spielerPunkteId_" + spielerIndex).innerText = String(spielerPunkte);
+}
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ! HILFSFUNKTION deleteCardFromHandDeck(cardId)
@@ -490,8 +493,12 @@ async function checkCardWithTopCard(cardId) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 async function getCardInformation(cardId) {
 
-    handKarten = await getCards();
+    getCardsResponse = await getCards();
+    console.log("Response von getCards, ", getCardsResponse);
+    handKarten = getCardsResponse.Cards;
+    console.log("erster teil von response getcards", getCardsResponse.Cards);
     let kartenIndex = cardId.charAt(cardId.length - 1);
+    console.log("KartenIndex", kartenIndex);
     farbe = handKarten[kartenIndex].Color;
     wert = handKarten[kartenIndex].Value;
     wildColor = handKarten[kartenIndex].Value;
@@ -543,15 +550,8 @@ async function getCards() {
 
     if (response.ok) {
         let result = await response.json();
-        handKarten = result.Cards;
-        spielerPunkte = result.Score;
-        console.log("HandkartenspielerPunkte", spielerPunkte);
-
-        // aktuellerSpieler = result.Player;
-        // spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
-        // console.log("getCards", handKarten);
-        // createCardImage(spielerIndex);
-        return handKarten;
+       
+        return result;
     }
     else {
         alert("Methode getCards, HTTP-Error: " + response.status);
