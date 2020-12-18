@@ -8,7 +8,7 @@ Nr.	Anforderung – Das Unosystem …	Status	Hinweise
 5	muss alle Namen aller SpielerInnen darstellen.		                    (erledigt)
 6	muss die Punkte aller SpielerInnen darstellen.		                    (erledigt)
 
-7	muss nach einer SpielerInnen Aktion etwaige Punkteveränderungen darstellen.		Teilweise, hinzu passt, abziehen fehlt
+7	muss nach einer SpielerInnen Aktion etwaige Punkteveränderungen darstellen.		(erledigt)
 
 8	muss aktive/n SpielerIn visuell hervorheben.		                    (erledigt)
 9	muss die aufgedeckte Karte darstellen.		                            (erledigt)
