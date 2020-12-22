@@ -653,4 +653,3 @@ async function getCards() {
         alert("Methode getCards, HTTP-Error: " + response.status);
     }
 };
-
