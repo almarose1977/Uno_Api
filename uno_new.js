@@ -206,6 +206,23 @@ function createFirstHandCards(spielerIndex) {
         createCardImage(spielerIndex, j, kartenFarbe, kartenWert);
     }
 }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//! Hilfsfunktion, um die Bilder den Karten zuzuweisen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+function createCardImage(spielerIndex, j, kartenFarbe, kartenWert) {
+
+    let kartenDiv = document.createElement("div");
+    kartenDiv.setAttribute("class", "Handkarten_" + handkartenDivNames[spielerIndex])   // Class Attribut, falls wir es brauchen
+    kartenDiv.id = handkartenDivNames[spielerIndex] + j;
+    img = document.createElement("img");
+    img.src = "images/cards/" + kartenFarbe + kartenWert + ".png";
+    img.height = 90;
+    img.id = handkartenDivNames[spielerIndex] + j;
+    img.setAttribute("onclick", "chooseCard(this.id)");
+    kartenDiv.appendChild(img);
+    document.getElementById(handkartenDivNames[spielerIndex]).appendChild(kartenDiv);
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! Hilfsfunktion, um den Spielern ihren Punktestand zuzuweisen
@@ -274,65 +291,128 @@ async function drawCard() {
     }
 };
 
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//! Hilfsfunktion, um zu prüfen, ob die angeklickte Karte gespielt werden darf
-// Festlegung von Farbe, Wert und WildColor
+//! ChooseCard: Farbe + Wert der angeklickten Karte bestimmen und gewünschte Wildcolor definieren
+// 1. prüfen, ob die Karte, die angeklickt wurde, vom richtigen Spieler kommt --> correctPlayer(cardId)
+// 2. wenn sie vom richtigen Spieler kommt, Farbe und Wert auslesen --> getCardInformation(cardId)
+// 3. prüfen, ob es eine schwarze Karte ist
+// 3. überprüfen, ob sie gespielt werden darf --> mit topCard vergleichen 
+// 4. Karte ausspielen --> playCard(cardId)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-async function checkCard(cardId) {
 
-    // aktuelle TopCard
-    topCard = await getTopCard();     // muss die aktuelle TopCard abfragen, weil im HTML wird zwar eine TopCard angezeigt, aber mit der ID der Karte, die drauf gelegt wurde
-    let farbeTC = topCard.Color;
-    let wertTC = topCard.Value;
+async function chooseCard(cardId) {
 
-    await getCardInformation(cardId);   // Farbe und Wert der angeklickten Karte werden ausgelesen
-
-    // Vergleich mit TopCard (wenn die Farbe oder der Wert passt)
-    if (farbe == farbeTC || wert == wertTC) {
-        console.log("Farbe oder Wert passt");
-        wildColor = "";
+    console.log("0. chooseCard - Topcard: ", topCard);
+    if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
+        alert("Falscher Spieler ausgewählt");     //? alert, Animation, etc.
+        console.log("aktueller Spieler", aktuellerSpieler);
     }
+    else {      //! wenn's der richtige Spieler ist
 
-    else if (farbe == "Black" && wert == 14) {                 // Wildcard
+        let cardInformation = await getCardInformation(cardId);
+        farbe = cardInformation[0];
+        wert = cardInformation[1]; // Farbe und Wert der angeklickten Karte werden ausgelesen
+        console.log("1. chooseCard - Farbe und Wert aus cardInformation: ", farbe, wert);
+        console.log("2. chooseCard - cardId: ", cardId);
+        console.log("3. chooseCard - Handkarten: ", handKarten);
 
-        await modalDialogChooseColor();
-        farbe = "";     // todo: vielleicht farbe doch wieder im modalDialog integrieren
 
-    }
-    else if (farbe == "Black" && wert == 13) // +4 --> 
-    {
-        console.log("FarbeTC", farbeTC);
-        console.log("Handkarten in checkCard", handKarten);
-        // if (!handKarten.includes(farbeTC)){ // todo: muss ich anders machen: for-schleife über die handkarten und die farben abfragen
-            for(let i = 0; i < handKarten.length; i++){
-                if(handKarten[i].Color == farbeTC){
-                    console.log("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc. 
-                }
-                else{
-                    await modalDialogChooseColor();
-                    farbe = "";
+        if (farbe == "Black") {
+            let counter = 0;
+            for (let i = 0; i < handKarten.length; i++) {
+                if (handKarten[i].Color == topCard.Color) {
+                    counter++;
                 }
             }
+            if (wert == 13 && counter > 0) {
+                console.log("4. chooseCard - Anzahl HK mit passender Farbe: ", topCard.Color, counter);
+                alert("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
+            }
+            else {
+                wildColor = await modalDialogChooseColor();
+                setTimeout(alertFunc, 5000);
+                function alertFunc() {
+                    console.log("2. WildColor aus ModDia:", wildColor);
+                    playCard(cardId);
+                };
+            }
+        }
 
+        // Wenns eine normale Karte ist, Vergleich mit TopCard (wenn die Farbe oder der Wert passt)
+        else if (farbe == topCard.Color || wert == topCard.Value) {
+            
+            console.log("5. chooseCard - topCard für Farbvergleich: ", topCard);
+                setTimeout(ausprobieren, 1000);
+                function ausprobieren() {
+                    console.log("6. chooseCard - Farbe oder Wert passt");
+                    wildColor = "";
+                    playCard(cardId);
+                };
+            }
 
-        // }
-        // else{
-        //     console.log(
-        // }
+        else {
+            console.log("6. chooseCard - farbe und wert der nicht passenden Karte: ", farbe, wert)
+            alert("Falsche Karte ausgewählt!")  //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
+        }
+    }
+};
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// !PLAY CARD
+// request Info: gameId, Kartenfarbe, Kartenwert und Wildcard --> es wird kein Spieler übergeben!!!!!!!!!! --> muss über die Id der Karten gehen
+// response:    Player (der Spieler, der nach dem Spielzug dran ist (wenn Annie die Karte spielt ist der Player Brandi), string), 
+//              Cards (Karten des Spielers, der als nächstes dran ist, CardResponse:   Color (string), Text (textuelle Darstellung Kartenwert, string),
+//                                                          Value (enum), Score (int))
+//              Score (int, Gesamtpunktzahl aller seiner Handkarten)
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 1. die gespielte Karte wird zur TopCard --> replaceTopCard() oder oder die gewünschte Karte --> wildCardAsTopCard()
+// 2. die restlichen Handkarten-Elemnte löschen --> deleteAllCardsInHandDeck(aktuellerSpieler)
+// 3. die "neuen" HK ohne die gespielte Karte wieder aufbauen lassen --> createCardsAfterDelete(spielerIndex)
+// 4. die spielerPunkte des Spielers reduzieren --> updateScore()
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+async function playCard(cardId) {
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/playCard/" + gameId + "?value=" + wert + "&color=" + farbe + "&wildColor=" + wildColor, {
+        method: 'PUT',
+        contentType: 'application/json'
+
+    });
+    if (response.ok) {
+        let result = await response.json();
+
+        console.log("1. playCard - Wert ", wert);
+        spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
+        console.log("2. playCard - spielerindex", spielerIndex);
+        console.log("3. playCard - aktueller Spieler", aktuellerSpieler);
+        
+        if (wert == 13 || wert == 14) {
+            console.log("4. playCard - Farbe = wildColor: ", farbe);
+            wildCardAsTopCard(cardId);
+        }
+        else {
+            replaceTopCard(cardId);
+        }
+        deleteAllCardsInHandDeck(aktuellerSpieler);
+        // console.log("4. playCard - nach deleteAllCardsInHandDeck: Handkarten: ", handKarten);
+        createCardsAfterDelete(spielerIndex);
+        // console.log("5. playCard - nach createCardsAfterDelete: Handkarten: ", handKarten);
+        updateScore();
+
+        aktuellerSpieler = result.Player;
+        document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
+        topCard = await getTopCard();
+        console.log("6. playCard - TopCard: ", topCard);
     }
     else {
-        console.log("Falsche Karte ausgewählt.");
-        alert("Falsche Karte ausgewählt!")  //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
+        alert("Methode chooseCards, HTTP-Error: " + response.status);
     }
-
-};
+}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! Modaler Dialog zur Bestimmung der gewünschten Karte nach dem berechtigten Spielen einer schwarzen Sonderkarte
 // Festlegung von wildColor
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-async function modalDialogChooseColor() {
+function modalDialogChooseColor() {
     $('#wildColor').modal();
 
     document.addEventListener('click', function (evt) {
@@ -357,7 +437,8 @@ async function modalDialogChooseColor() {
     function playRed() {
         console.log("es wurde ROT gespielt");
         wildColor = "Red";
-        console.log(wildColor);
+        console.log("wildColor im ModDiag:", wildColor);
+
     }
     function playYellow() {
         console.log("GELB wird gewünscht");
@@ -371,7 +452,8 @@ async function modalDialogChooseColor() {
         console.log("Grün ist die Farbe der Wahl!");
         wildColor = "Green";
     }
-}
+    return wildColor;
+};
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // !CORRECT PLAYER(cardId)
@@ -380,7 +462,7 @@ async function modalDialogChooseColor() {
 // und mit dem aktuellenSpieler vergleichen
 // cardId = "nord5" ==> parentElement.id = "nord"
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-function correctPlayer(cardId) {    //! die Methode funktioniert, ist richtig
+function correctPlayer(cardId) {
 
     let nameAusId = document.getElementById(cardId).parentElement.id;
 
@@ -415,112 +497,7 @@ async function getCardInformation(cardId) {
     let kartenIndex = cardId.charAt(cardId.length - 1);
     farbe = handKarten[kartenIndex].Color;
     wert = handKarten[kartenIndex].Value;
-};
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// !PLAY CARD
-// request Info: gameId, Kartenfarbe, Kartenwert und Wildcard --> es wird kein Spieler übergeben!!!!!!!!!! --> muss über die Id der Karten gehen
-// response:    Player (der Spieler, der nach dem Spielzug dran ist (wenn Annie die Karte spielt ist der Player Brandi), string), 
-//              Cards (Karten des Spielers, der als nächstes dran ist, CardResponse:   Color (string), Text (textuelle Darstellung Kartenwert, string),
-//                                                          Value (enum), Score (int))
-//              Score (int, Gesamtpunktzahl aller seiner Handkarten)
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// 1. prüfen, ob die Karte, die angeklickt wurde, vom richtigen Spieler kommt --> correctPlayer(cardId)
-// 2. wenn sie vom richtigen Spieler kommt, Farbe und Wert auslesen --> getCardInformation(cardId)
-// 3. überprüfen, ob sie gespielt werden darf --> mit topCard vergleichen 
-// 4. Karte ausspielen --> playCard(cardId,...)
-// 1. die gespielte Karte wird zur TopCard --> replaceTopCard();
-// 2. die restlichen Handkarten-Elemnte löschen --> deleteAllCardsInHandDeck(aktuellerSpieler)
-// 3. die "neuen" HK ohne die gespielte Karte wieder aufbauen lassen --> createCardsAfterDelete(spielerIndex)
-// 4. die spielerPunkte des Spielers reduzieren --> updateScore()
-
-async function playCard(cardId) {
-
-    if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
-        console.log("Falscher Spieler ausgewählt");     //? alert, Animation, etc.
-        console.log("aktueller Spieler", aktuellerSpieler);
-    }
-    else {  //! wenn es der korrekte Player ist
-
-        await checkCard(cardId);
-
-
-        let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/playCard/" + gameId + "?value=" + wert + "&color=" + farbe + "&wildColor=" + wildColor, {
-            method: 'PUT',
-            contentType: 'application/json'
-
-        });
-
-        if (response.ok) {
-            let result = await response.json();
-
-            spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
-
-            if (wildColor === "") {
-                replaceTopCard(cardId);
-            }
-            else {
-                wildCardAsTopCard(cardId);
-            }
-
-            deleteAllCardsInHandDeck(aktuellerSpieler);
-
-            createCardsAfterDelete(spielerIndex);
-
-            updateScore();
-
-            // nächsten Spieler zum aktuellen Spieler machen
-            aktuellerSpieler = result.Player;
-            document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
-
-        }
-        else {
-            alert("Methode playCards, HTTP-Error: " + response.status);
-        }
-    };
-
-}
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ! HILFSFUNKTION wildCardAsTopCard(cardId)
-//? die mitgegebene gewünschte farbe wird zur TopCard
-//? Topcard muss mit der bestimmten Farbwahlkarte ersetzt werden ("wild_b, wild_g, wild_r, wild_y")
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-function wildCardAsTopCard(cardId) {
-
-    deleteSelectedCardFromHandDeck(cardId);
-
-    console.log("WildColor", wildColor);
-    console.log("Es wurde eine schwarze Karte gespielt!");
-
-    if (wildColor == "Red") {
-
-        let alteStartkarte = document.getElementById("startkarte").lastChild;
-        img = document.createElement("img");
-        img.src = "images/cards/wild_r.png"
-        img.height = 150;                                                               // TopCard ist größer als Handkarte
-        document.getElementById("startkarte").replaceChild(img, alteStartkarte);
-    }
-
-}
-
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ! HILFSFUNKTION replaceTopCard(cardId)
-// lastChild von der id="startkarte", weil davor noch der Text "Ablagestapel" ist
-// ich verwende das image aus deleteSelectedCardFromHandDeck, um es der "neuen" Topkarte zuzuweisen
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-function replaceTopCard(cardId) {
-
-    deleteSelectedCardFromHandDeck(cardId);
-
-    let alteStartkarte = document.getElementById("startkarte").lastChild;
-    img = zuloeschendeKarte;
-    img.height = 150;                                                               // TopCard ist größer als Handkarte
-    document.getElementById("startkarte").replaceChild(img, alteStartkarte);
+    return [farbe, wert];
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -533,16 +510,52 @@ function replaceTopCard(cardId) {
 // Deshalb ist der Index der Karte ein anderer als die Id des Karten-Images!!!!!!
 // Lösung: die Handkarten werden zuerst komplett gelöscht und dann mit der aktuellen Kartenhand wieder aufgebaut!
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ! HILFSFUNKTION deleteSelectedCardFromHandDeck(cardId)
+// ! HILFSFUNKTION removeSelectedCardFromHandDeck(cardId)
 // das firstChild des Elements mit der cardId ist das image (<img src="images/cards/Red8.png" height="150" id="nord1" onclick="checkCard(this.id)">
 // das ParentElement ist: <div class="Handkarten_nord" id="nord1"></div>
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-function deleteSelectedCardFromHandDeck(cardId) {
+function removeSelectedCardFromHandDeck(cardId) {
 
+    let parentElement = document.getElementById(cardId);
+    // console.log("1. ParentElement", parentElement);
     zuloeschendeKarte = document.getElementById(cardId).firstChild;
     zuloeschendeKarte.parentElement.removeChild(zuloeschendeKarte);
 };
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ! HILFSFUNKTION replaceTopCard(cardId)
+// lastChild von der id="startkarte", weil davor noch der Text "Ablagestapel" ist
+// ich verwende das image aus removeSelectedCardFromHandDeck, um es der "neuen" Topkarte zuzuweisen
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+function replaceTopCard(cardId) {
+
+    removeSelectedCardFromHandDeck(cardId);
+
+    let alteStartkarte = document.getElementById("startkarte").lastChild;
+    img = zuloeschendeKarte;
+    img.height = 150;                                                               // TopCard ist größer als Handkarte
+    document.getElementById("startkarte").replaceChild(img, alteStartkarte);
+};
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ! HILFSFUNKTION wildCardAsTopCard(cardId)
+//? die mitgegebene gewünschte farbe wird zur TopCard
+//? Topcard muss mit der bestimmten Farbwahlkarte ersetzt werden ("wild_b, wild_g, wild_r, wild_y")
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+function wildCardAsTopCard(cardId) {
+
+    removeSelectedCardFromHandDeck(cardId);
+
+    let alteStartkarte = document.getElementById("startkarte").lastChild;
+    img = document.createElement("img");
+    img.src = "images/cards/" + wildColor + wert + ".png"
+    img.height = 150;
+    document.getElementById("startkarte").replaceChild(img, alteStartkarte);
+    // topCard.Color = farbe;
+}
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! Hilfsfunktion, um die kompletten Handkarten zu löschen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -554,15 +567,17 @@ function deleteAllCardsInHandDeck(aktuellerSpieler) {
         HKzuLoeschen.removeChild(HKzuLoeschen.firstChild);
     }
 };
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! Hilfsfunktion, um die Karten nach dem Löschen wieder aufbauen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 async function createCardsAfterDelete(spielerIndex) {
     getCardsResponse = await getCards();
-    handKarten = getCardsResponse.Cards;
+    handKarten = getCardsResponse.Cards;    //
 
-    // aktuellerSpieler = getCardsResponse.Player;
+    console.log("1. createCardsAfterDelete, HandKarten: ", handKarten);
+
 
     for (let j = 0; j < handKarten.length; j++) {
         let kartenFarbe = handKarten[j].Color;
@@ -572,23 +587,6 @@ async function createCardsAfterDelete(spielerIndex) {
     }
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//! Hilfsfunktion, um die Bilder den Karten zuzuweisen
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-function createCardImage(spielerIndex, j, kartenFarbe, kartenWert) {
-
-    let kartenDiv = document.createElement("div");
-    kartenDiv.setAttribute("class", "Handkarten_" + handkartenDivNames[spielerIndex])   // Class Attribut, falls wir es brauchen
-    kartenDiv.id = handkartenDivNames[spielerIndex] + j;
-    img = document.createElement("img");
-    img.src = "images/cards/" + kartenFarbe + kartenWert + ".png";
-    img.height = 90;
-    img.id = handkartenDivNames[spielerIndex] + j;
-    img.setAttribute("onclick", "playCard(this.id)");
-    kartenDiv.appendChild(img);
-    document.getElementById(handkartenDivNames[spielerIndex]).appendChild(kartenDiv);
-}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! Funktion, um Punkte der Kartnhand zu aktualisieren
@@ -619,7 +617,9 @@ async function getTopCard() {
     if (response.ok) {
         let result = await response.json();
 
-        // topCard = result;
+        if(result.Value == 13 || result.Value == 14){
+            result.Color = wildColor;
+        }
         return result;
     }
     else {

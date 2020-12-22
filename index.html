@@ -101,31 +101,32 @@
             </div>
 
             <!-- hier fängt modal dialog der Farbvergabe an-->
-            <div class="modal fade" id="wildCardNames" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
-                <form id="wildCardForm">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Bitte such dir eine Farbe aus:</h5>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <button type="submit" class="form-control" id="rot" style=background-color:red>ROT</button>
-                                    <br>
-                                    <button type="submit" class="form-control" id="blau" style=background-color:blue >BLAU</button>
-                                    <br>
-                                    <button type="submit" class="form-control" id="gruen" style=background-color:green>GRUEN</button>
-                                   <br>
-                                   <button type="submit" class="form-control" id="gelb" style=background-color:yellow>GELB</button>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                            
-                            </div>
+            <div class="modal fade" id="wildColor" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+                <form id="wildColorForm">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Bitte wähle eine Farbe aus</h5>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-danger btn-block" id="rot" >ROT auswählen</button>
+                            <br>
+                          <button type="submit" class="btn btn-warning btn-block" id="gelb" style="background-color: yellow;">GELB
+                            auswählen</button>
+                            <br>
+                          <button type="submit" class="btn btn-success btn-block" id="gruen" style="background-color: green;">GRÜN
+                            auswählen</button>
+                            <br>
+                          <button type="submit" class="btn btn-primary btn-block" id="blau" style="background-color: blue;">BLAU
+                            auswählen</button>
                         </div>
+                      </div>
+            
                     </div>
+                  </div>
                 </form>
-            </div>
+              </div>
 
             <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js " integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj " crossorigin="anonymous"></script>
@@ -133,7 +134,7 @@
 
 
             <!--Our own custom UNO JS here -->
-            <script src="uno.js "></script>
+            <script src="uno_new.js"></script>
         </div>
 </body>
 <script></script>
