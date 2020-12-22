@@ -8,7 +8,7 @@ let gameId;         // Id des aktuellen Spiels
 let topCard;        // die oberste Karte am Ablegestapel - komplette CardResponse
 let farbe;          // Farbe der ausgewählten Karte
 let wert;           // Wert der Karte
-let wildColor;       // 
+let wildColor;      // Wunschfarbe nach Wurf einer WildCard oder +4
 let img;
 
 let aktuellerSpieler;   // Name des aktuellen Spielers
@@ -17,10 +17,10 @@ let spielerPunkte;             // Punktestand des Spielers
 let spielerNamenArray = [];     // Spielernamen Array erstellen
 let spielerIndex;
 
-let Spielerinnen;               // = result.Players
+let Spielerinnen;       // = result.Players
 
 let handKarten;         // komplette CardResponse
-let zuloeschendeKarte;
+let selectedCard;
 
 // Div-Namen der Handkarten der Spieler, um die Handkarten nachher auszuteilen
 let handkartenDivNames = [];
@@ -297,7 +297,7 @@ async function drawCard() {
 // 1. prüfen, ob die Karte, die angeklickt wurde, vom richtigen Spieler kommt --> correctPlayer(cardId)
 // 2. wenn sie vom richtigen Spieler kommt, Farbe und Wert auslesen --> getCardInformation(cardId)
 // 3. prüfen, ob es eine schwarze Karte ist
-// 3. überprüfen, ob sie gespielt werden darf --> mit topCard vergleichen 
+// 3. überprüfen, ob sie gespielt werden darf --> mit topCard.Color vergleichen 
 // 4. Karte ausspielen --> playCard(cardId)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -341,15 +341,15 @@ async function chooseCard(cardId) {
 
         // Wenns eine normale Karte ist, Vergleich mit TopCard (wenn die Farbe oder der Wert passt)
         else if (farbe == topCard.Color || wert == topCard.Value) {
-            
+
             console.log("5. chooseCard - topCard für Farbvergleich: ", topCard);
-                setTimeout(ausprobieren, 1000);
-                function ausprobieren() {
-                    console.log("6. chooseCard - Farbe oder Wert passt");
-                    wildColor = "";
-                    playCard(cardId);
-                };
-            }
+            setTimeout(ausprobieren, 1000);
+            function ausprobieren() {
+                console.log("6. chooseCard - Farbe oder Wert passt");
+                wildColor = "";
+                playCard(cardId);
+            };
+        }
 
         else {
             console.log("6. chooseCard - farbe und wert der nicht passenden Karte: ", farbe, wert)
@@ -383,27 +383,38 @@ async function playCard(cardId) {
         spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
         console.log("2. playCard - spielerindex", spielerIndex);
         console.log("3. playCard - aktueller Spieler", aktuellerSpieler);
-        
+
         if (wert == 13 || wert == 14) {
-            console.log("4. playCard - Farbe = wildColor: ", farbe);
             wildCardAsTopCard(cardId);
         }
         else {
             replaceTopCard(cardId);
         }
+        // if (handKarten.length == 0) {
+        //     alert(akutellerSpieler + " ist der Gewinner!!!!!!") //? Zeitpunkt für Konfetti
+        // }
+
         deleteAllCardsInHandDeck(aktuellerSpieler);
         // console.log("4. playCard - nach deleteAllCardsInHandDeck: Handkarten: ", handKarten);
         createCardsAfterDelete(spielerIndex);
         // console.log("5. playCard - nach createCardsAfterDelete: Handkarten: ", handKarten);
         updateScore();
-
+        
+        // console.log("XX playCards - Karten des Spielers, der als nächstes dran ist: ", result.Cards);   // helfen mir hier nicht weiter, falscher Spieler
+        if(wert == 10){
+            let spielerDerKartenNehmenMussUndAussetzt = spielerNamenArray[spielerIndex + 1];
+            console.log("4. playCard - spielerDerKartenNehmenMussUndAussetzt: ", spielerDerKartenNehmenMussUndAussetzt);
+            deleteAllCardsInHandDeck(spielerDerKartenNehmenMussUndAussetzt); 
+            createCardsAfterDelete(spielerIndex + 1);   // todo: in dieser Methode wird getCards() aufgerufen und retour kommen die Karten vom aktuellen Spieler, nicht vom "aktuellenSpieler + 1", d.h. ich weise dem aussetzenden Spieler die Karten vom vorherigen Spieler zu!!!!! FALSCH
+        }
         aktuellerSpieler = result.Player;
         document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
-        topCard = await getTopCard();
+        topCard = await getTopCard();           //* nochmaliger Aufruf, damit falls eine schwarze Karte gelegt wurde, die entsprechende Wunsch-Farbe ausgegeben wird
         console.log("6. playCard - TopCard: ", topCard);
+
     }
     else {
-        alert("Methode chooseCards, HTTP-Error: " + response.status);
+        alert("Methode playCard, HTTP-Error: " + response.status);
     }
 }
 
@@ -517,10 +528,10 @@ async function getCardInformation(cardId) {
 
 function removeSelectedCardFromHandDeck(cardId) {
 
-    let parentElement = document.getElementById(cardId);
+    // let parentElement = document.getElementById(cardId);
     // console.log("1. ParentElement", parentElement);
-    zuloeschendeKarte = document.getElementById(cardId).firstChild;
-    zuloeschendeKarte.parentElement.removeChild(zuloeschendeKarte);
+    selectedCard = document.getElementById(cardId).firstChild;
+    selectedCard.parentElement.removeChild(selectedCard);
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ! HILFSFUNKTION replaceTopCard(cardId)
@@ -532,10 +543,10 @@ function replaceTopCard(cardId) {
 
     removeSelectedCardFromHandDeck(cardId);
 
-    let alteStartkarte = document.getElementById("startkarte").lastChild;
-    img = zuloeschendeKarte;
+    let prevTopCard = document.getElementById("startkarte").lastChild;
+    img = selectedCard;
     img.height = 150;                                                               // TopCard ist größer als Handkarte
-    document.getElementById("startkarte").replaceChild(img, alteStartkarte);
+    document.getElementById("startkarte").replaceChild(img, prevTopCard);
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -548,12 +559,14 @@ function wildCardAsTopCard(cardId) {
 
     removeSelectedCardFromHandDeck(cardId);
 
-    let alteStartkarte = document.getElementById("startkarte").lastChild;
+    let prevTopCard = document.getElementById("startkarte").lastChild;
     img = document.createElement("img");
     img.src = "images/cards/" + wildColor + wert + ".png"
     img.height = 150;
-    document.getElementById("startkarte").replaceChild(img, alteStartkarte);
-    // topCard.Color = farbe;
+    document.getElementById("startkarte").replaceChild(img, prevTopCard);
+
+
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -562,9 +575,9 @@ function wildCardAsTopCard(cardId) {
 
 function deleteAllCardsInHandDeck(aktuellerSpieler) {
 
-    let HKzuLoeschen = document.getElementById(dictionary[aktuellerSpieler]);
-    while (HKzuLoeschen.firstChild) {
-        HKzuLoeschen.removeChild(HKzuLoeschen.firstChild);
+    let HandDeckToBeDeleted = document.getElementById(dictionary[aktuellerSpieler]);
+    while (HandDeckToBeDeleted.firstChild) {
+        HandDeckToBeDeleted.removeChild(HandDeckToBeDeleted.firstChild);
     }
 };
 
@@ -579,11 +592,13 @@ async function createCardsAfterDelete(spielerIndex) {
     console.log("1. createCardsAfterDelete, HandKarten: ", handKarten);
 
 
+
     for (let j = 0; j < handKarten.length; j++) {
         let kartenFarbe = handKarten[j].Color;
         let kartenWert = handKarten[j].Value;
 
         createCardImage(spielerIndex, j, kartenFarbe, kartenWert);
+
     }
 }
 
@@ -617,7 +632,7 @@ async function getTopCard() {
     if (response.ok) {
         let result = await response.json();
 
-        if(result.Value == 13 || result.Value == 14){
+        if (result.Value == 13 || result.Value == 14) {
             result.Color = wildColor;
         }
         return result;
