@@ -330,25 +330,25 @@ async function chooseCard(cardId) {
                 alert("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
             }
             else {
-                wildColor = await modalDialogChooseColor();
-                setTimeout(alertFunc, 5000);
-                function alertFunc() {
-                    console.log("2. WildColor aus ModDia:", wildColor);
-                    playCard(cardId);
-                };
+                wildColor = await modalDialogChooseColor(cardId);
+                // setTimeout(alertFunc, 5000);
+                // function alertFunc() {
+                //     console.log("2. WildColor aus ModDia:", wildColor);
+                //     playCard(cardId);
+                // };
             }
         }
 
         // Wenns eine normale Karte ist, Vergleich mit TopCard (wenn die Farbe oder der Wert passt)
         else if (farbe == topCard.Color || wert == topCard.Value) {
 
-            console.log("5. chooseCard - topCard für Farbvergleich: ", topCard);
-            setTimeout(ausprobieren, 1000);
-            function ausprobieren() {
-                console.log("6. chooseCard - Farbe oder Wert passt");
-                wildColor = "";
-                playCard(cardId);
-            };
+            console.log("6. chooseCard - Farbe oder Wert passt");
+            wildColor = "";
+            playCard(cardId);
+            // console.log("5. chooseCard - topCard für Farbvergleich: ", topCard);
+            // setTimeout(ausprobieren, 1000);
+            // function ausprobieren() {
+            // };
         }
 
         else {
@@ -397,20 +397,22 @@ async function playCard(cardId) {
         deleteAllCardsInHandDeck(aktuellerSpieler);
         // console.log("4. playCard - nach deleteAllCardsInHandDeck: Handkarten: ", handKarten);
         createCardsAfterDelete(spielerIndex);
-        // console.log("5. playCard - nach createCardsAfterDelete: Handkarten: ", handKarten);
+        console.log("5. playCard - nach createCardsAfterDelete: Handkarten: ", handKarten);
         updateScore();
-        
+
         // console.log("XX playCards - Karten des Spielers, der als nächstes dran ist: ", result.Cards);   // helfen mir hier nicht weiter, falscher Spieler
-        if(wert == 10){
-            let spielerDerKartenNehmenMussUndAussetzt = spielerNamenArray[spielerIndex + 1];
-            console.log("4. playCard - spielerDerKartenNehmenMussUndAussetzt: ", spielerDerKartenNehmenMussUndAussetzt);
-            deleteAllCardsInHandDeck(spielerDerKartenNehmenMussUndAussetzt); 
-            createCardsAfterDelete(spielerIndex + 1);   // todo: in dieser Methode wird getCards() aufgerufen und retour kommen die Karten vom aktuellen Spieler, nicht vom "aktuellenSpieler + 1", d.h. ich weise dem aussetzenden Spieler die Karten vom vorherigen Spieler zu!!!!! FALSCH
-        }
+        // if(wert == 10){
+        //     let spielerDerKartenNehmenMussUndAussetzt = spielerNamenArray[spielerIndex + 1];
+        //     console.log("4. playCard - spielerDerKartenNehmenMussUndAussetzt: ", spielerDerKartenNehmenMussUndAussetzt);
+        //     deleteAllCardsInHandDeck(spielerDerKartenNehmenMussUndAussetzt); 
+        //     createCardsAfterDelete(spielerIndex + 1);   // todo: in dieser Methode wird getCards() aufgerufen und retour kommen die Karten vom aktuellen Spieler, nicht vom "aktuellenSpieler + 1", d.h. ich weise dem aussetzenden Spieler die Karten vom vorherigen Spieler zu!!!!! FALSCH
+        // }
         aktuellerSpieler = result.Player;
         document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
         topCard = await getTopCard();           //* nochmaliger Aufruf, damit falls eine schwarze Karte gelegt wurde, die entsprechende Wunsch-Farbe ausgegeben wird
         console.log("6. playCard - TopCard: ", topCard);
+        // spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
+        // createCardsAfterDelete(spielerIndex);
 
     }
     else {
@@ -423,47 +425,31 @@ async function playCard(cardId) {
 // Festlegung von wildColor
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-function modalDialogChooseColor() {
+function modalDialogChooseColor(cardId) {
     $('#wildColor').modal();
 
     document.addEventListener('click', function (evt) {
 
         evt.preventDefault();
         if (evt.target.id == "rot") {
-            playRed();
+            wildColor = "Red";
+            playCard(cardId);
         }
         else if (evt.target.id === "blau") {
-            playBlue();
+            wildColor = "Blue";
+            playCard(cardId);
         }
         else if (evt.target.id === "gruen") {
-            playGreen();
+            wildColor = "Green";
+            playCard(cardId);
         }
         else if (evt.target.id === "gelb") {
-            playYellow();
+            wildColor = "Yellow";
+            playCard(cardId);
         }
 
         $('#wildColor').modal('hide');
     })
-
-    function playRed() {
-        console.log("es wurde ROT gespielt");
-        wildColor = "Red";
-        console.log("wildColor im ModDiag:", wildColor);
-
-    }
-    function playYellow() {
-        console.log("GELB wird gewünscht");
-        wildColor = "Yellow";
-    }
-    function playBlue() {
-        console.log("BLAU hab ich mir ausgesucht");
-        wildColor = "Blue";
-    }
-    function playGreen() {
-        console.log("Grün ist die Farbe der Wahl!");
-        wildColor = "Green";
-    }
-    return wildColor;
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -531,6 +517,7 @@ function removeSelectedCardFromHandDeck(cardId) {
     // let parentElement = document.getElementById(cardId);
     // console.log("1. ParentElement", parentElement);
     selectedCard = document.getElementById(cardId).firstChild;
+    console.log("1. removeSelectedCardFromHandDeck - selectedCard", selectedCard);
     selectedCard.parentElement.removeChild(selectedCard);
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -564,9 +551,6 @@ function wildCardAsTopCard(cardId) {
     img.src = "images/cards/" + wildColor + wert + ".png"
     img.height = 150;
     document.getElementById("startkarte").replaceChild(img, prevTopCard);
-
-
-
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -590,8 +574,6 @@ async function createCardsAfterDelete(spielerIndex) {
     handKarten = getCardsResponse.Cards;    //
 
     console.log("1. createCardsAfterDelete, HandKarten: ", handKarten);
-
-
 
     for (let j = 0; j < handKarten.length; j++) {
         let kartenFarbe = handKarten[j].Color;
