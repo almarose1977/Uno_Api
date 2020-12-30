@@ -11,16 +11,18 @@ let wert;           // Wert der Karte
 let wildColor;      // Wunschfarbe nach Wurf einer WildCard oder +4
 let img;
 
-let aktuellerSpieler;   // Name des aktuellen Spielers
-let spielerPunkte;             // Punktestand des Spielers
+let currentPlayerName;   // Name des aktuellen Spielers
+let spielerPunkte;      // Punktestand des Spielers
 
 let spielerNamenArray = [];     // Spielernamen Array erstellen
-let spielerIndex;
+let spielerIndex;               // Index der Spieler im spielerNamenArray
 
 let Spielerinnen;       // = result.Players
 
 let handKarten;         // komplette CardResponse
-let selectedCard;
+let selectedCard;       // ausgewählte Karte, die gespielt werden soll
+
+let gameDirection;      // Richtung des Spiels, true im Uhrzeigersinn, false gegen den Uhrzeigersinn
 
 // Div-Namen der Handkarten der Spieler, um die Handkarten nachher auszuteilen
 let handkartenDivNames = [];
@@ -157,14 +159,20 @@ async function spielfeldLaden() {
         Spielerinnen = result.Players;
 
         // AKTUELLER SPIELER
-        aktuellerSpieler = result.NextPlayer;
+        currentPlayerName = result.NextPlayer;
         let p = document.createElement("p");
-        p.innerText = aktuellerSpieler;
+        p.innerText = currentPlayerName;
         p.id = "aktuellerSpielerId";
         document.getElementById("activePlayer").appendChild(p);
 
         // STARTKARTE 
         topCard = result.TopCard;
+        if (topCard.Value === 12) {
+            gameDirection = -1;
+        }
+        else {
+            gameDirection = 1;
+        }
         img = document.createElement("img");
         img.src = "images/cards/" + topCard.Color + topCard.Value + ".png";
         img.id = "startkartenImage";
@@ -267,23 +275,23 @@ async function drawCard() {
     if (response.ok) {
         let result = await response.json();
         console.log(result);
-        aktuellerSpieler = result.Player;
+        currentPlayerName = result.Player;
 
         let karte = result.Card;
         console.log("neue Karte", karte);
 
-        spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
+        spielerIndex = spielerNamenArray.indexOf(currentPlayerName);
 
-        deleteAllCardsInHandDeck(aktuellerSpieler);
+        deleteAllCardsInHandDeck(currentPlayerName);
 
-        createCardsAfterDelete(spielerIndex);
+        createCardsAfterDelete(spielerIndex,currentPlayerName);
 
         // Score der Spieler aktualisieren
-        updateScore();
+        updateScore(spielerIndex, currentPlayerName);
 
         // nächsten Spieler zum aktuellen Spieler machen
-        aktuellerSpieler = result.NextPlayer;
-        document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
+        currentPlayerName = result.NextPlayer;
+        document.getElementById("aktuellerSpielerId").innerText = currentPlayerName;
     }
 
     else {
@@ -305,12 +313,12 @@ async function chooseCard(cardId) {
 
     console.log("0. chooseCard - Topcard: ", topCard);
     if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
-        alert("Falscher Spieler ausgewählt");     //? alert, Animation, etc.
-        console.log("aktueller Spieler", aktuellerSpieler);
+        alert("Falscher Spieler ausgewählt! Aktueller Spieler ist: " + currentPlayerName);     //? alert, Animation, etc.
+        // console.log("aktueller Spieler", currentPlayerName);
     }
     else {      //! wenn's der richtige Spieler ist
 
-        let cardInformation = await getCardInformation(cardId);
+        let cardInformation = await getCardInformation(cardId,currentPlayerName);
         farbe = cardInformation[0];
         wert = cardInformation[1]; // Farbe und Wert der angeklickten Karte werden ausgelesen
         console.log("1. chooseCard - Farbe und Wert aus cardInformation: ", farbe, wert);
@@ -318,24 +326,27 @@ async function chooseCard(cardId) {
         console.log("3. chooseCard - Handkarten: ", handKarten);
 
 
-        if (farbe == "Black") {
+        if (wert === 12) {
+            gameDirection = gameDirection * -1;
+        }
+        if (farbe === "Black") {
             let counter = 0;
             for (let i = 0; i < handKarten.length; i++) {
                 if (handKarten[i].Color == topCard.Color) {
                     counter++;
                 }
             }
-            if (wert == 13 && counter > 0) {
+            if (wert === 13 && counter > 0) {
                 console.log("4. chooseCard - Anzahl HK mit passender Farbe: ", topCard.Color, counter);
                 alert("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
             }
             else {
-                wildColor = await modalDialogChooseColor(cardId);
+                wildColor = modalDialogChooseColor(cardId);
             }
         }
 
         // Wenns eine normale Karte ist, Vergleich mit TopCard (wenn die Farbe oder der Wert passt)
-        else if (farbe == topCard.Color || wert == topCard.Value) {
+        else if (farbe === topCard.Color || wert === topCard.Value) {
 
             console.log("6. chooseCard - Farbe oder Wert passt");
             wildColor = "";
@@ -358,7 +369,7 @@ async function chooseCard(cardId) {
 //              Score (int, Gesamtpunktzahl aller seiner Handkarten)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // 1. die gespielte Karte wird zur TopCard --> replaceTopCard() oder oder die gewünschte Karte --> wildCardAsTopCard()
-// 2. die restlichen Handkarten-Elemnte löschen --> deleteAllCardsInHandDeck(aktuellerSpieler)
+// 2. die restlichen Handkarten-Elemnte löschen --> deleteAllCardsInHandDeck(currentPlayerName)
 // 3. die "neuen" HK ohne die gespielte Karte wieder aufbauen lassen --> createCardsAfterDelete(spielerIndex)
 // 4. die spielerPunkte des Spielers reduzieren --> updateScore()
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -372,9 +383,9 @@ async function playCard(cardId) {
         let result = await response.json();
 
         console.log("1. playCard - Wert ", wert);
-        spielerIndex = spielerNamenArray.indexOf(aktuellerSpieler);
+        spielerIndex = spielerNamenArray.indexOf(currentPlayerName);
         console.log("2. playCard - spielerindex", spielerIndex);
-        console.log("3. playCard - aktueller Spieler", aktuellerSpieler);
+        console.log("3. playCard - aktueller Spieler", currentPlayerName);
 
         if (wert == 13 || wert == 14) {
             wildCardAsTopCard(cardId);
@@ -383,20 +394,42 @@ async function playCard(cardId) {
             replaceTopCard(cardId);
         }
 
-
-        deleteAllCardsInHandDeck(aktuellerSpieler);
+        deleteAllCardsInHandDeck(currentPlayerName);
         // console.log("4. playCard - nach deleteAllCardsInHandDeck: Handkarten: ", handKarten);
-        createCardsAfterDelete(spielerIndex);
-        console.log("5. playCard - nach createCardsAfterDelete: Handkarten: ", handKarten);
-        updateScore();
+        createCardsAfterDelete(spielerIndex, currentPlayerName);
+        // console.log("5. playCard - nach createCardsAfterDelete: Handkarten: ", handKarten);
+        updateScore(spielerIndex, currentPlayerName);
 
-        let gewinner = aktuellerSpieler;
-        aktuellerSpieler = result.Player;
-        if (gewinner == aktuellerSpieler) {
+        console.log("5b playCard - Spieler, der eben gespielt hat: ", currentPlayerName);
 
-            alert(gewinner + " ist der Gewinner!!!!!!") //? Zeitpunkt für Konfetti
+        if (wert === 10 || wert === 13) {   //* wenn es eine +2 Karte ist, dann sollen die Karten des nächsten Spielers(der nicht spielen darf), ebenfalls aktualisiert werden
+
+            let indexPlayerToBeSkipped = spielerIndex + gameDirection;
+            if (indexPlayerToBeSkipped === 4) {
+                indexPlayerToBeSkipped = 0;
+            }
+            if (indexPlayerToBeSkipped === -1) {
+                indexPlayerToBeSkipped = 3;
+            }
+
+            console.log("A. playCard - indexPlayerToBeSkipped: ", indexPlayerToBeSkipped);
+            let affectedPlayerName = spielerNamenArray[indexPlayerToBeSkipped];
+            console.log("B. playCard - affectedPlayerName: ", affectedPlayerName);
+
+            deleteAllCardsInHandDeck(affectedPlayerName);
+            createCardsAfterDelete(indexPlayerToBeSkipped, affectedPlayerName);
+            updateScore(indexPlayerToBeSkipped,affectedPlayerName);
         }
-        document.getElementById("aktuellerSpielerId").innerText = aktuellerSpieler;
+
+        let winner = currentPlayerName;
+        currentPlayerName = result.Player;
+        console.log("C. playCard - currentPlayerName = result.Player: ", currentPlayerName);
+        if (winner == currentPlayerName) { //* wenn ein Spieler seine letzte Karte spielen kann, ist der Player vom playCardResult nicht mehr der nächste Spieler, sondern der aktuelle 
+
+            alert(winner + " ist der Gewinner!!!!!!") //? Zeitpunkt für Konfetti
+        }
+
+        document.getElementById("aktuellerSpielerId").innerText = currentPlayerName;
         topCard = await getTopCard();           //* nochmaliger Aufruf, damit falls eine schwarze Karte gelegt wurde, die entsprechende Wunsch-Farbe ausgegeben wird
         console.log("6. playCard - TopCard: ", topCard);
 
@@ -447,14 +480,14 @@ function modalDialogChooseColor(cardId) {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function correctPlayer(cardId) {
 
-    let nameAusId = document.getElementById(cardId).parentElement.id;
+    let nameFromId = document.getElementById(cardId).parentElement.id;
 
-    if (nameAusId == dictionary[aktuellerSpieler]) {
-        console.log(nameAusId, " ist richtig");                 // aktuellerSpieler = "Annie"
+    if (nameFromId == dictionary[currentPlayerName]) {
+        console.log(nameFromId, " ist richtig");                 // currentPlayerName = "Annie"
         return true;
     }
     else {
-        console.log(nameAusId, " ist falsch");
+        console.log(nameFromId, " ist falsch");
         return false;
     }
 };
@@ -473,9 +506,9 @@ function correctPlayer(cardId) {
 // fixen Index angeben (z.B. .charAt(4) würde für "ost2" nicht funktionieren)
 //! mit diesem Index kann ich dann die Handkarte im Array bestimmen und davon die Farbe und den Wert
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-async function getCardInformation(cardId) {
+async function getCardInformation(cardId, currentPlayerName) {
 
-    getCardsResponse = await getCards();
+    getCardsResponse = await getCards(currentPlayerName);
     handKarten = getCardsResponse.Cards;
     let kartenIndex = cardId.charAt(cardId.length - 1);
     farbe = handKarten[kartenIndex].Color;
@@ -501,10 +534,14 @@ async function getCardInformation(cardId) {
 function removeSelectedCardFromHandDeck(cardId) {
 
     let parentElement = document.getElementById(cardId);
-    console.log("1. ParentElement", parentElement);
-    selectedCard = document.getElementById(cardId).firstChild;
+    // console.log("1. ParentElement", parentElement);
+    // selectedCard = document.getElementById(cardId).lastChild;
+    // selectedCard.parentElement.removeChild(selectedCard);
+    
+    selectedCard = document.getElementById(cardId);
     console.log("1. removeSelectedCardFromHandDeck - selectedCard", selectedCard);
-    selectedCard.parentElement.removeChild(selectedCard);
+    
+    selectedCard.removeChild;
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ! HILFSFUNKTION replaceTopCard(cardId)
@@ -546,23 +583,23 @@ function wildCardAsTopCard(cardId) {
 //! Hilfsfunktion, um die kompletten Handkarten zu löschen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-function deleteAllCardsInHandDeck(aktuellerSpieler) {
+function deleteAllCardsInHandDeck(currentPlayerName) {
 
-    let HandDeckToBeDeleted = document.getElementById(dictionary[aktuellerSpieler]);
+    let HandDeckToBeDeleted = document.getElementById(dictionary[currentPlayerName]);
     while (HandDeckToBeDeleted.firstChild) {
-        HandDeckToBeDeleted.removeChild(HandDeckToBeDeleted.lastChild);
+        HandDeckToBeDeleted.removeChild(HandDeckToBeDeleted.firstChild);
     }
 };
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//! Hilfsfunktion, um die Karten nach dem Löschen wieder aufbauen
+//! Hilfsfunktion, um die Karten nach dem Löschen wieder aufzubauen
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-async function createCardsAfterDelete(spielerIndex) {
+async function createCardsAfterDelete(spielerIndex, playerName) {
 
     // spielerNamenArray durchlaufen und für jeden Spieler die Karten erstellen lassen, getCards den Spieler mitgeben
 
-    getCardsResponse = await getCards(spielerIndex);
+    getCardsResponse = await getCards(playerName);
     handKarten = getCardsResponse.Cards;    //
 
     // console.log("1. createCardsAfterDelete, HandKarten: ", handKarten);
@@ -572,17 +609,16 @@ async function createCardsAfterDelete(spielerIndex) {
         let kartenWert = handKarten[j].Value;
 
         createCardImage(spielerIndex, j, kartenFarbe, kartenWert);
-
     }
 
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//! Funktion, um Punkte der Kartnhand zu aktualisieren
+//! Funktion, um Punkte der Kartenhand zu aktualisieren
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-async function updateScore() {
+async function updateScore(spielerIndex, currentPlayerName) {
 
-    getCardsResponse = await getCards();
+    getCardsResponse = await getCards(currentPlayerName);
     spielerPunkte = getCardsResponse.Score;
     // console.log("Spielerpunkte: ", spielerPunkte);
     document.getElementById("spielerPunkteId_" + spielerIndex).innerText = String(spielerPunkte);
@@ -624,9 +660,9 @@ async function getTopCard() {
 //              Score (Gesamtpunktzahl aller seiner Handkarten, int)
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-async function getCards() {
+async function getCards(currentPlayerName) {
 
-    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + gameId + "?playerName=" + aktuellerSpieler, {
+    let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/GetCards/" + gameId + "?playerName=" + currentPlayerName, {
         method: 'GET',
         contentType: 'application/json'
 
