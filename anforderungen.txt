@@ -17,16 +17,16 @@ Nr.	Anforderung – Das Unosystem …	Status	Hinweise
 
 12	muss das Spielen einer Karte animieren.		
 
-13	muss nach dem Spielen einer Karte die aufgedeckte Karte aktualisieren.		
+13	muss nach dem Spielen einer Karte die aufgedeckte Karte aktualisieren.	(erledigt)	
 
 14	muss für die aktive Spielerin/den aktiven Spieler die Möglichkeit bieten eine Karte abzuheben.		(erledigt)
 15	muss das Abheben einer Karte animieren.		
 16	muss ungültige Aktionen animieren.		
-17	muss das Spiel beenden und SiegerIn visualisieren, wenn eine Person keine Karten mehr besitzt.		
-18	muss die Wahl einer Farbe erlauben, wenn eine Uno Sonderkarte gespielt wurde.		
-19	muss die gewählte Farbe nach einer Farbwahl visualisieren.		
+17	muss das Spiel beenden und SiegerIn visualisieren, wenn eine Person keine Karten mehr besitzt.	    (erledigt)	
+18	muss die Wahl einer Farbe erlauben, wenn eine Uno Sonderkarte gespielt wurde.		                (erledigt)
+19	muss die gewählte Farbe nach einer Farbwahl visualisieren.		                                    (erledigt)
 20	soll unnötige Anfragen an den Server verhindern. (z.B. Falsche Karte gespielt, nicht aktive SpielerIn versucht Karte zu spielen)		
-    [Nur die Farbe muss passen oder der Wert, + der richtige Spieler muss gewählt sein  3 if‘s]
+    [Nur die Farbe muss passen oder der Wert, + der richtige Spieler muss gewählt sein  3 if‘s]        (erledigt)
 21	soll nett aussehen 		
 
 
