@@ -41,7 +41,7 @@ let getCardsResponse;
 // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
 // nur für Testzwecke, damit man nicht ständig die Namen eingeben muss
 let name1 = "Annie";
-let name2 = "Brandi";
+let name2 = "Bali";
 let name3 = "Charly";
 let name4 = "Debbie";
 // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
@@ -176,7 +176,7 @@ async function spielfeldLaden() {
         img = document.createElement("img");
         img.src = "images/cards/" + topCard.Color + topCard.Value + ".png";
         img.id = "startkartenImage";
-        img.height = 150;
+        img.height = 90;
         document.getElementById("startkarte").appendChild(img);
 
         // HANDKARTEN
@@ -555,7 +555,7 @@ function replaceTopCard(cardId) {
 
     let prevTopCard = document.getElementById("startkarte").lastChild;
     img = selectedCard;
-    img.height = 150;                                                               // TopCard ist größer als Handkarte
+    img.height = 90;                                                               // TopCard ist größer als Handkarte
     document.getElementById("startkarte").replaceChild(img, prevTopCard);
 
 
@@ -574,7 +574,7 @@ function wildCardAsTopCard(cardId) {
     let prevTopCard = document.getElementById("startkarte").lastChild;
     img = document.createElement("img");
     img.src = "images/cards/" + wildColor + wert + ".png"
-    img.height = 150;
+    img.height = 90;
     document.getElementById("startkarte").replaceChild(img, prevTopCard);
 
 }
