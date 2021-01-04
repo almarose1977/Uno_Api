@@ -10,13 +10,13 @@
 /*    border: 2px solid #ffaf04;	*/
     display: block;	
     position: relative;	
-    -webkit-animation: pulsate 2.5s ease-out alternate;
+    -webkit-animation: aktuellerSpielerNeon 2.5s ease-out alternate;
     -webkit-animation-iteration-count: infinite; 	
     opacity: 1;
     font-size: 8vw;
 }
 
-@-webkit-keyframes pulsate {	
+@-webkit-keyframes aktuellerSpielerNeon {	
    0%,
   100% {
     text-shadow: 
@@ -41,8 +41,8 @@
 img:hover{
         border: #146C80 solid 5px;
         border-radius: 8px; 
-transform: scale(1.5);
-transition: all 0.1s; 
+        transform: scale(1.5);
+        transition: all 0.1s; 
 
         /* -webkit-animation-duration: 0.5s;
         -webkit-animation-name: cardsOnHover; */
@@ -111,11 +111,11 @@ img {
     padding-top: 50px;
 }
 #sf-mitte_card_stack_new:active{
-	-webkit-animation: flip-out-ver-left 0.5s cubic-bezier(0.1, 0.7, 1.0, 0.1) both;
+	-webkit-animation: drawCardVertFlip 0.5s cubic-bezier(0.1, 0.7, 1.0, 0.1) both;
 
 }
 
-@-webkit-keyframes flip-out-ver-left {
+@-webkit-keyframes drawCardVertFlip {
     0% {
               transform: rotateY(-90deg);
       opacity: 1;
@@ -167,13 +167,18 @@ img {
     
     #greeting {
         padding-top: 8vw;
-        padding-left: 1vw;
+        padding-left: 6vw;
         color: #ADFF2F;
         text-shadow: 8px 8px 5px #082180;
     }
 
     h1{
     font-size: 8vh;
+    -webkit-transform: rotate(-15deg);
+        -moz-transform: rotate(-15deg);
+        -o-transform: rotate(-15deg);
+        -ms-transform: rotate(-15deg);
+        transform: rotate(-15deg);
     }
     
    
