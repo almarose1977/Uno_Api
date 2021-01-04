@@ -99,7 +99,51 @@ img {
               transform-origin: 100% 100%;
     }
   }
-  
+
+#playerNames{
+    background-color: #8BFDFE;
+    background-image: url('https://image.api.playstation.com/vulcan/img/rnd/202010/0901/hhIev1lTZ5owLf2eTVnjpFoj.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+#playerNamesForm{
+    font-family: 'courier', san-serif; 
+    position: relative; 
+    align-self: center;
+    color: rgb(103, 243, 39);
+
+}
+.modal-header{
+    background-color: green;
+    justify-content: center;}
+.modal-body{
+    background-image: url('https://image.api.playstation.com/vulcan/img/rnd/202010/0901/hhIev1lTZ5owLf2eTVnjpFoj.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.modal-footer{
+    background-color: red;
+}
+#playerNamesSubmit{
+    color:rgb(103, 243, 39);
+    background-color: royalblue;
+    border-radius: 20px;
+}
+#wildColor{
+    font-family: 'Courier New', Courier, monospace;
+    color:rgb(103, 243, 39); 
+    
+}
+.modal-title{
+    text-align: center;
+    align-self: center;
+    justify-content: center;
+}
+
+
+
 
 #activePlayer {
     margin-left: -100px;
