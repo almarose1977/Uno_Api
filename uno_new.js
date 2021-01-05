@@ -313,12 +313,16 @@ async function chooseCard(cardId) {
 
     console.log("0. chooseCard - Topcard: ", topCard);
     if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
-        // console.log("aktueller Spieler", currentPlayerName);
-        let element = document.getElementById(cardId);
-        element.classList.add('shake');
+        
+        let playerNameID = cardId.slice(0, cardId.length - 1);          
+        
+        let element = document.getElementById("sn-" + playerNameID);    // sn-ost, sn-west, sn-nord, sn-sued
+    
+        element.classList.add('bounce-out-bck');                        //? mögliche Animationen siehe index.css --> Animista
         setTimeout(function () {
-            element.classList.remove('shake');
-        }, 1000);
+            element.classList.remove('bounce-out-bck');
+        }, 1500);
+        
 
         // alert("Falscher Spieler ausgewählt! Aktueller Spieler ist: " + currentPlayerName);     //? alert, Animation, etc.
     }
@@ -361,9 +365,9 @@ async function chooseCard(cardId) {
 
         else {
             let element = document.getElementById(cardId);
-            element.classList.add('shake');
+            element.classList.add('shake-lr');
             setTimeout(function () {
-                element.classList.remove('shake');
+                element.classList.remove('shake-lr');
             }, 1000);
 
             console.log("6. chooseCard - farbe und wert der nicht passenden Karte: ", farbe, wert)
