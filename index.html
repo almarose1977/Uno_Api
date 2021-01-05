@@ -34,7 +34,7 @@
 
                         <div class="col-4" id="activePlayer">Aktueller Spieler:</div>
 
-
+                </div>
                     </div>
                     <div class="container-fluid" id="ctn-west-mitte-ost">
                         <div class="container" id="ctn-west">
@@ -43,15 +43,15 @@
                             </div>
                             <div id="west"></div>
                             <div class="punkte" id="score-west">Score: </div>
+                        </div >
+                        <div id="sf-mitte">
+                                <div id="sf-mitte_card_stack_new" title= "Ziehe eine Karte, du süßes Ding!" class="cards" onclick="drawCard();">
+                                    <img src="images/cards/back0.png" height="150px">
+                                </div>
+                                <div id="sf-mitte_ablagestapel" class="cards">
+                                    <p id="startkarte"></p>
+                                </div>
                         </div>
-                        <div id="sf-mitte_card_stack_new" title= "Ziehe eine Karte, du süßes Ding!" class="cards" onclick="drawCard();">
-                            <img src="images/cards/back0.png" height="150px">
-                        </div>
-                        <div id="sf-mitte_ablagestapel" class="cards">
-                            <p id="startkarte"></p>
-                            
-                        </div>
-
                         <div class="container" id="ctn-ost">
 
                             <div class="punkte" id="score-ost">Score: </div>
@@ -61,12 +61,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container" id="ctn-sued">
-                        <div class="punkte" id="score-sued">Score: </div>
-                        <div id="sued"> </div>
-                        <div class="row justify-content-center" id="sn-sued">
-                            Name Sued
+                    <div class="container-fluid" id="suedUndWarnings">
+                        <div id="wrongCard" class="wrong d-none" class="container">FALSCHE KARTE!
+                            <div><button class="ok">OK</button>  </div>                      
                         </div>
+                        <div id="wrongPlayer" class="wrong d-none" class="container"> DU NICHT!
+                            <div><button class="ok">OK</button>  </div>                      
+                        </div>
+                        <div id="wrong4" class="wrong d-none" class="container"> ANDERE KARTE!
+                            <div><button class="ok">OK</button>  </div>                      
+                        </div>
+                        <div class="container" id="ctn-sued">
+                            <div class="punkte" id="score-sued">Score: </div>
+                            <div id="sued"> </div>
+                            <div class="row justify-content-start" id="sn-sued">
+                                Name Sued
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -137,11 +149,5 @@
         </div>
 </body>
 <script></script>
-<!-- ***********************************************
-    Wofür brauchen wir das u.a. Script?
-    Ohne funktioniert es, dass das Formular verschwindet, nachdem man auf Spiel starten klickt
-****************************************************-->
-
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js "></script>-->
 
 </html>

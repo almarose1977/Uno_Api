@@ -284,7 +284,7 @@ async function drawCard() {
 
         deleteAllCardsInHandDeck(currentPlayerName);
 
-        createCardsAfterDelete(spielerIndex, currentPlayerName);
+        createCardsAfterDelete(spielerIndex,currentPlayerName);
 
         // Score der Spieler aktualisieren
         updateScore(spielerIndex, currentPlayerName);
@@ -313,22 +313,18 @@ async function chooseCard(cardId) {
 
     console.log("0. chooseCard - Topcard: ", topCard);
     if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
-        
-        let playerNameID = cardId.slice(0, cardId.length - 1);          
-        
-        let element = document.getElementById("sn-" + playerNameID);    // sn-ost, sn-west, sn-nord, sn-sued
     
-        element.classList.add('bounce-out-bck');                        //? mögliche Animationen siehe index.css --> Animista
-        setTimeout(function () {
-            element.classList.remove('bounce-out-bck');
-        }, 1500);
-        
+//! TODO Funktion umändern und eine Falscher Spieler klasse machen
+    // const wrongPlayer = document.getElementById(wrongPlayer);
+    // function wPlayer(){
+    // wrongPlayer.classList.remove("d-none");
 
-        // alert("Falscher Spieler ausgewählt! Aktueller Spieler ist: " + currentPlayerName);     //? alert, Animation, etc.
-    }
+    alert("Falscher Spieler ausgewählt! Aktueller Spieler ist: " + currentPlayerName);     //? alert, Animation, etc.
+        console.log("aktueller Spieler", currentPlayerName);}
+    // };
     else {      //! wenn's der richtige Spieler ist
 
-        let cardInformation = await getCardInformation(cardId, currentPlayerName);
+        let cardInformation = await getCardInformation(cardId,currentPlayerName);
         farbe = cardInformation[0];
         wert = cardInformation[1]; // Farbe und Wert der angeklickten Karte werden ausgelesen
         console.log("1. chooseCard - Farbe und Wert aus cardInformation: ", farbe, wert);
@@ -348,6 +344,11 @@ async function chooseCard(cardId) {
             }
             if (wert === 13 && counter > 0) {
                 console.log("4. chooseCard - Anzahl HK mit passender Farbe: ", topCard.Color, counter);
+                
+                
+      //! TODO Funktion umändern und eine +4 darf nicht gespielt werden klasse machen 
+          
+                
                 alert("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
             }
             else {
@@ -361,17 +362,17 @@ async function chooseCard(cardId) {
             console.log("6. chooseCard - Farbe oder Wert passt");
             wildColor = "";
             playCard(cardId);
+
         }
 
         else {
-            let element = document.getElementById(cardId);
-            element.classList.add('shake-lr');
-            setTimeout(function () {
-                element.classList.remove('shake-lr');
-            }, 1000);
-
             console.log("6. chooseCard - farbe und wert der nicht passenden Karte: ", farbe, wert)
-            // alert("Richtiger Spieler, falsche Karte ausgewählt!")  //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
+           
+           
+  //! TODO Funktion umändern und eine Warnung machen 
+         
+           
+            alert("Richtiger Spieler, falsche Karte ausgewählt!")  //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
         }
     }
 };
@@ -433,7 +434,7 @@ async function playCard(cardId) {
 
             deleteAllCardsInHandDeck(affectedPlayerName);
             createCardsAfterDelete(indexPlayerToBeSkipped, affectedPlayerName);
-            updateScore(indexPlayerToBeSkipped, affectedPlayerName);
+            updateScore(indexPlayerToBeSkipped,affectedPlayerName);
         }
 
         let winner = currentPlayerName;
@@ -441,6 +442,9 @@ async function playCard(cardId) {
         console.log("C. playCard - currentPlayerName = result.Player: ", currentPlayerName);
         if (winner == currentPlayerName) { //* wenn ein Spieler seine letzte Karte spielen kann, ist der Player vom playCardResult nicht mehr der nächste Spieler, sondern der aktuelle 
 
+//! TODO Funktion umändern und eine Konfetti klasse machen 
+            
+            
             alert(winner + " ist der Gewinner!!!!!!") //? Zeitpunkt für Konfetti
         }
 
@@ -552,10 +556,10 @@ function removeSelectedCardFromHandDeck(cardId) {
     // console.log("1. ParentElement", parentElement);
     // selectedCard = document.getElementById(cardId).lastChild;
     // selectedCard.parentElement.removeChild(selectedCard);
-
+    
     selectedCard = document.getElementById(cardId);
     console.log("1. removeSelectedCardFromHandDeck - selectedCard", selectedCard);
-
+    
     selectedCard.removeChild;
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -578,8 +582,8 @@ function replaceTopCard(cardId) {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ! HILFSFUNKTION wildCardAsTopCard(cardId)
-// die mitgegebene gewünschte farbe wird zur TopCard
-// Topcard muss mit der bestimmten Farbwahlkarte ersetzt werden, z.B. Blue13 
+//? die mitgegebene gewünschte farbe wird zur TopCard
+//? Topcard muss mit der bestimmten Farbwahlkarte ersetzt werden ("wild_b, wild_g, wild_r, wild_y")
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function wildCardAsTopCard(cardId) {

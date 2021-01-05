@@ -1,4 +1,4 @@
-    #body {
+#body {
     height: auto;
 }
 
@@ -13,7 +13,7 @@
     -webkit-animation: aktuellerSpielerNeon 2.5s ease-out alternate;
     -webkit-animation-iteration-count: infinite; 	
     opacity: 1;
-    font-size: 5vw;
+    font-size: 8vw;
 }
 
 @-webkit-keyframes aktuellerSpielerNeon {	
@@ -38,156 +38,6 @@
     }
 }
 
-/* ANIMATION FÜR FALSCHE KARTE*/
-.shake-lr {
-    animation: shake-lr 0.7s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
-  }
-  
-@keyframes shake-lr {
-    0%,
-    100% {
-      transform: rotate(0deg);
-      transform-origin: 50% 50%;
-    }
-    10% {
-      transform: rotate(8deg);
-    }
-    20%,
-    40%,
-    60% {
-      transform: rotate(-10deg);
-    }
-    30%,
-    50%,
-    70% {
-      transform: rotate(10deg);
-    }
-    80% {
-      transform: rotate(-8deg);
-    }
-    90% {
-      transform: rotate(8deg);
-    }
-  }
-  
-  /* mögliche ANIMATIONen FÜR FALSCHEN SPIELER*/
-
-  .bounce-out-bck {
-	animation: bounce-out-bck 1.5s both;
-}
-
- @keyframes bounce-out-bck {
-    0% {
-      transform: translateZ(0);
-      animation-timing-function: ease-out;
-    }
-    5% {
-      transform: translateZ(-100px);
-      animation-timing-function: ease-in;
-    }
-    15% {
-      transform: translateZ(0);
-      animation-timing-function: ease-out;
-    }
-    25% {
-      transform: translateZ(-110px);
-      animation-timing-function: ease-in;
-    }
-    38% {
-      transform: translateZ(0);
-      animation-timing-function: ease-out;
-    }
-    52% {
-      transform: translateZ(-200px);
-      animation-timing-function: ease-in;
-    }
-    70% {
-      transform: translateZ(0) scale(1);
-      animation-timing-function: ease-out;
-    }
-    85% {
-      opacity: 1;
-    }
-    100% {
-      transform: translateZ(-900px) scale(0);
-      animation-timing-function: ease-in;
-      opacity: 0;
-    }
-  }
-  
-  
-  .text-blur-out {
-	animation: text-blur-out 1.2s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
-}
- 
- @keyframes text-blur-out {
-    0% {
-      filter: blur(0.01);
-    }
-    100% {
-      filter: blur(12px) opacity(0%);
-    }
-  }
-  
-
-  .bounce-bottom {
-	animation: bounce-bottom 0.9s both;
-}
-
- @keyframes bounce-bottom {
-    0% {
-      transform: translateY(45px);
-      animation-timing-function: ease-in;
-      opacity: 1;
-    }
-    24% {
-      opacity: 1;
-    }
-    40% {
-      transform: translateY(24px);
-      animation-timing-function: ease-in;
-    }
-    65% {
-      transform: translateY(12px);
-      animation-timing-function: ease-in;
-    }
-    82% {
-      transform: translateY(6px);
-      animation-timing-function: ease-in;
-    }
-    93% {
-      transform: translateY(4px);
-      animation-timing-function: ease-in;
-    }
-    25%,
-    55%,
-    75%,
-    87% {
-      transform: translateY(0px);
-      animation-timing-function: ease-out;
-    }
-    100% {
-      transform: translateY(0px);
-      animation-timing-function: ease-out;
-      opacity: 1;
-    }
-  }
-  
-  .rotate-center {
-animation: rotate-center 0.6s ease-in-out both;
-}
-
-@keyframes rotate-center {
-    0% {
-      transform: rotate(0);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-
-
 img:hover{
         border: #146C80 solid 5px;
         border-radius: 8px; 
@@ -203,10 +53,9 @@ img:hover{
    40% {transform: translateY(-10px);} 
    60% {transform: translateY(-5px);} 
 } */
-
-img {
-    -webkit-animation: rotate-diagonal-br 0.4s linear 1 both;
-    animation: rotate-diagonal-br 0.4s linear 1 both;
+img:active{
+    -webkit-animation: rotate-diagonal-br 3s linear 1 both;
+    animation: rotate-diagonal-br 0.5s linear 1 both;
 }
 
 @-webkit-keyframes rotate-diagonal-br {
@@ -248,7 +97,38 @@ img {
       -webkit-transform-origin: 100% 100%;
               transform-origin: 100% 100%;
     }
-  }
+  } 
+
+.wrong{
+    width: 40vw;
+    height: 20vw; 
+    border:  #146C80 solid 5px;
+    background-color: #ADFF2F;
+    color:darkblue;
+    border-radius: 25px; 
+    z-index: 2;
+    margin-top: 2vw; 
+    font-size: 4vw;
+    margin-left: 16vw; 
+    margin-right: -14vw;
+    animation: alternateColors 0.5s infinite; 
+}
+@keyframes alternateColors{
+    0%,
+    100%{
+        background-color: #ADFF2F;
+        color:darkblue
+    }
+    50%{
+        background-color: rgb(0, 255, 136);
+        color:magenta
+    }
+}
+.ok{
+    border-radius: 25px;
+    color: yellow;
+    background-color: darkblue;
+}
 
 #playerNames{
     background-color: #8BFDFE;
@@ -297,12 +177,13 @@ img {
 
 #activePlayer {
     margin-left: -100px;
-    padding-top: 5vw;
+    padding-top: 11vw;
     font-size: 3vh
 }
 #sf-mitte_card_stack_new{
     align-self: center;
-    padding-top: 50px;
+    margin-top: -60px; 
+    padding-left: 20px; 
 }
 #sf-mitte_card_stack_new:active{
 	-webkit-animation: drawCardVertFlip 0.5s cubic-bezier(0.1, 0.7, 1.0, 0.1) both;
@@ -388,6 +269,8 @@ img {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+        margin-bottom: -90px;
+        margin-left: -100px;
     }
     /* sn - spielername */
     
@@ -480,14 +363,16 @@ img {
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
-        min-width: 20vw;
-        min-height: 10vw;
+        min-width: 12vw;
+        min-height: 20vw;
         border-radius: 18px;
-        border: solid 5px darkgreen;
+        /* border: solid 5px darkgreen; */
         display: flex;
         justify-content: center;
         align-items: center;
         margin-left: 38px;
+        margin-right: 48px; 
+        margin-top: -27px; 
     }
     
     #ctn-ost {
@@ -530,7 +415,7 @@ img {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 18px;
+        margin-top: -25px;
     }
     #score-sued{
         border-radius: 50%;
@@ -554,6 +439,12 @@ img {
         /* padding: 20px; */
         margin: 10px;
         margin-bottom: 20px;
+    }
+    #suedUndWarnings{
+        display:flex; 
+        justify-content: flex-start;
+        align-items: flex-start;
+        
     }
 
     
