@@ -46,13 +46,11 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
     evt.preventDefault(); // verhindert das Abschicken des post requests vom submit und damit das neuladen der seite (wollen nicht, dass beim uno die seite neu geladen wird)
     // hier kommt der code hin, der anstelle des post requests passieren soll
 
-
     let name1 = document.getElementById("player1_id").value.toUpperCase();
     let name2 = document.getElementById("player2_id").value.toUpperCase();
     let name3 = document.getElementById("player3_id").value.toUpperCase();
     let name4 = document.getElementById("player4_id").value.toUpperCase();
 
-   
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Spielernamen Vergleich
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
