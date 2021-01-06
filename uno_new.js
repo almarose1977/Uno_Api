@@ -30,23 +30,10 @@ let handkartenDivNames = [];
 // Dictionary/Map, um die Spielernamen-Divs mit den Spielernamen zu matchen --> drawCard: hier hab ich nur die Spielernamen zur Verfügung, brauch aber die entsprechende Id dazu
 let dictionary = {};    // String/ String
 
-let dictionaryIdName = {}; // um aus der KartenId zum Spielernamen zu kommen
-
 // Array der Spieler-Namen-Divs --> um den Score zuzuweisen
 let divNamesScore = [];
 
 let getCardsResponse;
-
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
-// nur für Testzwecke, damit man nicht ständig die Namen eingeben muss
-let name1 = "Annie";
-let name2 = "Bali";
-let name3 = "Charly";
-let name4 = "Debbie";
-// ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // !AUFRUF des Modalen Dialogs zur Spielereingabe
@@ -61,23 +48,10 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
 
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // ++++++++++++++++++++++++++ für Testzwecke auskommentiert - fürs Spiel wieder einkommentieren +++++++++++++++++++++++
-    // let name1 = document.getElementById("player1_id").value.toUpperCase();
-    // let name2 = document.getElementById("player2_id").value.toUpperCase();
-    // let name3 = document.getElementById("player3_id").value.toUpperCase();
-    // let name4 = document.getElementById("player4_id").value.toUpperCase();
-
-    // ++++++++++++++++++++++++++ für Testzwecke auskommentiert - fürs Spiel wieder einkommentieren +++++++++++++++++++++++
-
-    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
-    document.getElementById("player1_id").value = name1;
-    document.getElementById("player2_id").value = name2;
-    document.getElementById("player3_id").value = name3;
-    document.getElementById("player4_id").value = name4;
-    // ++++++++++++++++++++++++++ für Testzwecke geschrieben +++++++++++++++++++++++ später wieder löschen
-    // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    let name1 = document.getElementById("player1_id").value.toUpperCase();
+    let name2 = document.getElementById("player2_id").value.toUpperCase();
+    let name3 = document.getElementById("player3_id").value.toUpperCase();
+    let name4 = document.getElementById("player4_id").value.toUpperCase();
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -102,10 +76,6 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
         dictionary[name3] = document.getElementById("sued").id;
         dictionary[name4] = document.getElementById("west").id;
 
-        dictionaryIdName[document.getElementById("nord").id] = name1;   // nord : Annie
-        dictionaryIdName[document.getElementById("ost").id] = name2;    // ost : Brandi
-        dictionaryIdName[document.getElementById("sued").id] = name3;
-        dictionaryIdName[document.getElementById("west").id] = name4;
 
         // Spielernamen den entsprechenden sn-Elementen zuweisen
         document.getElementById("sn-nord").innerText = name1;
