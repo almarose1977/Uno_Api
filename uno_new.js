@@ -322,7 +322,13 @@ async function chooseCard(cardId) {
         setTimeout(function () {
             element.classList.remove('bounce-out-bck');
         }, 1500);
-        
+
+        document.getElementById("wrongPlayer").classList.remove("d-none");
+        let okBtn = document.getElementsByClassName("ok");
+        okBtn.addEventListener("click", () => {
+            document.getElementById("wrongPlayer").classList.add("d-none");
+
+        });
 
         // alert("Falscher Spieler ausgewählt! Aktueller Spieler ist: " + currentPlayerName);     //? alert, Animation, etc.
     }
