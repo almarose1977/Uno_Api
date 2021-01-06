@@ -462,8 +462,10 @@ async function playCard(cardId) {
         currentPlayerName = result.Player;
         console.log("C. playCard - currentPlayerName = result.Player: ", currentPlayerName);
         if (winner == currentPlayerName) { //* wenn ein Spieler seine letzte Karte spielen kann, ist der Player vom playCardResult nicht mehr der nächste Spieler, sondern der aktuelle 
+            document.getElementById("fireworks").classList.remove("d-none");
+            document.getElementById("gewinnerSpieler").innerText = currentPlayerName;
 
-            alert(winner + " ist der Gewinner!!!!!!") //? Zeitpunkt für Konfetti
+            // alert(winner + " ist der Gewinner!!!!!!") //? Zeitpunkt für Konfetti
         }
 
         document.getElementById("aktuellerSpielerId").innerText = currentPlayerName;
