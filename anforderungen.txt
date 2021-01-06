@@ -15,13 +15,13 @@ Nr.	Anforderung – Das Unosystem …	Status	Hinweise
 10	muss den Abhebestapel darstellen.		                                                            (erledigt)
 11	muss für die aktive Spielerin/den aktiven Spieler die Möglichkeit bieten eine Karte zu spielen.		(erledigt)
 
-12	muss das Spielen einer Karte animieren.		
+12	muss das Spielen einer Karte animieren.		                                                        (erledigt)
 
 13	muss nach dem Spielen einer Karte die aufgedeckte Karte aktualisieren.	                            (erledigt)	
 
 14	muss für die aktive Spielerin/den aktiven Spieler die Möglichkeit bieten eine Karte abzuheben.		(erledigt)
-15	muss das Abheben einer Karte animieren.		
-16	muss ungültige Aktionen animieren.		
+15	muss das Abheben einer Karte animieren.		                                                        (erledigt)
+16	muss ungültige Aktionen animieren.		                                                            (erledigt)
 17	muss das Spiel beenden und SiegerIn visualisieren, wenn eine Person keine Karten mehr besitzt.	    (erledigt)	
 18	muss die Wahl einer Farbe erlauben, wenn eine Uno Sonderkarte gespielt wurde.		                (erledigt)
 19	muss die gewählte Farbe nach einer Farbwahl visualisieren.		                                    (erledigt)
