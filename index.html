@@ -19,32 +19,40 @@
     <div id="body">
         <div class="img-container" id="img-uno">
             <div class="spielbrett">
+                <div id="fireworks" class="d-none">
+                    <div id="winner">
+                    GRATULIERE! <div class=""></div> ,DU HAST GEWONNEN!
+                    <!-- <img src="fireworks.gif" alt="feuerwerk"> -->
+                    <!-- 002 "https://i.pinimg.com/originals/26/fc/d4/26fcd4f30edc4ba8228532eb766c52ce.gif" -->
+                    <!--       "https://i.pinimg.com/originals/08/b9/40/08b9408a4b8f97c449f03ea87b7e7937.gif" -->
+                
+</div>
+</div>
+                    <div class="container-fluid">
+                        <div class="row justify-content-start">
+                            <div class="col-4" id="greeting">
+                                <h1>Hallo Uno Spieler!</h1>
+                            </div>
 
-                <div class="container-fluid">
-                    <div class="row justify-content-start">
-                        <div class="col-4" id="greeting">
-                            <h1>Hallo Uno Spieler!</h1>
+                            <div class="col" id="ctn-nord">
+                                <div id="sn-nord"> Name Nord </div>
+                                <div id="nord"></div>                <!-- Div-Namen geändert, damit's a bissi einfacher ist!!!! -->
+                                <div class="punkte" id="score-nord">Score: </div>
+                            </div>
+
+                            <div class="col-4" id="activePlayer">Aktueller Spieler:</div>
+
                         </div>
-
-                        <div class="col" id="ctn-nord">
-                            <div id="sn-nord"> Name Nord </div>
-                            <div id="nord"></div>                <!-- Div-Namen geändert, damit's a bissi einfacher ist!!!! -->
-                            <div class="punkte" id="score-nord">Score: </div>
-                        </div>
-
-                        <div class="col-4" id="activePlayer">Aktueller Spieler:</div>
-
-                </div>
                     </div>
-                    <div class="container-fluid" id="ctn-west-mitte-ost">
-                        <div class="container" id="ctn-west">
-                            <div class="row justify-content-start align-items-center col align-self-center" id="sn-west">
+                        <div class="container-fluid" id="ctn-west-mitte-ost">
+                            <div class="container" id="ctn-west">
+                                <div class="row justify-content-start align-items-center col align-self-center" id="sn-west">
                                 Name West
                             </div>
                             <div id="west"></div>
                             <div class="punkte" id="score-west">Score: </div>
-                        </div>
-                        <div id="sf-mitte">
+                            </div>
+                            <div id="sf-mitte">
 
                             <div id="sf-mitte_card_stack_new" title= "Ziehe eine Karte, du süßes Ding!" class="cards" onclick="drawCard();">
                                 <img src="images/cards/back0.png" height="150px">
@@ -69,10 +77,10 @@
                         <div id="wrongCard" class="wrong d-none" class="container">FALSCHE KARTE!
                             <div><button class="ok">OK</button>  </div>                      
                         </div>
-                        <div id="wrongPlayer" class="wrong d-none" class="container"> DU NICHT!
+                        <div id="wrongPlayer" class="wrong d-none" class="container">DU NICHT!
                             <div><button class="ok" onclick="uno_new.js"> OK </button>  </div>                      
                         </div>
-                        <div id="wrong4" class="wrong d-none" class="container"> ANDERE KARTE!
+                        <div id="wrong4" class="wrong d-none" class="container">ANDERE KARTE!
                             <div><button class="ok">OK</button>  </div>                      
                         </div>
                         <div class="container" id="ctn-sued">
