@@ -1,6 +1,28 @@
     #body {
     height: auto;
 }
+#fireworks{
+  background-image: url('https://i.pinimg.com/originals/08/b9/40/08b9408a4b8f97c449f03ea87b7e7937.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+#winner{
+  width: 65%;
+  height: 100vh;
+  background-color: lightgoldenrodyellow;
+  opacity: 85%;
+  font-size: 10vw; 
+  color:#cfff04;
+  text-shadow:#146C80 -18px 5px; 
+  align-self: center;
+  position: relative;
+  top: 15%;
+  left: 15%;
+  border-radius: 5vw;
+padding-top: 130px;
+}
 
     /*ANIMATIONEN*/
 #aktuellerSpielerId{		
@@ -208,46 +230,32 @@ img:active {
   -webkit-animation: rotate-diagonal-br 3s linear 1 both;
   animation: rotate-diagonal-br 3s linear 1 both;
 }
-@-webkit-keyframes rotate-diagonal-br {
-    0% {
-      -webkit-transform: rotate3d(-1, 1, 0, 0deg);
-              transform: rotate3d(-1, 1, 0, 0deg);
-      -webkit-transform-origin: 100% 100%;
-              transform-origin: 100% 100%;
-    }
-    50% {
-      -webkit-transform: rotate3d(-1, 1, 0, -180deg);
-              transform: rotate3d(-1, 1, 0, -180deg);
-      -webkit-transform-origin: 100% 100%;
-              transform-origin: 100% 100%;
-    }
-    100% {
-      -webkit-transform: rotate3d(-1, 1, 0, -360deg);
-              transform: rotate3d(-1, 1, 0, -360deg);
-      -webkit-transform-origin: 100% 100%;
-              transform-origin: 100% 100%;
+
+@-webkit-keyframes roll-out-top {
+  0% {
+    -webkit-transform: translateY(0) rotate(0deg);
+            transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-800px) rotate(-540deg);
+            transform: translateY(-800px) rotate(-540deg);
+    opacity: 0;
+  }
+}
+@keyframes roll-out-top {
+  0% {
+    -webkit-transform: translateY(0) rotate(0deg);
+            transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateY(-800px) rotate(-540deg);
+            transform: translateY(-800px) rotate(-540deg);
+    opacity: 0;
     }
   }
-  @keyframes rotate-diagonal-br {
-    0% {
-      -webkit-transform: rotate3d(-1, 1, 0, 0deg);
-              transform: rotate3d(-1, 1, 0, 0deg);
-      -webkit-transform-origin: 100% 100%;
-              transform-origin: 100% 100%;
-    }
-    50% {
-      -webkit-transform: rotate3d(-1, 1, 0, -180deg);
-              transform: rotate3d(-1, 1, 0, -180deg);
-      -webkit-transform-origin: 100% 100%;
-              transform-origin: 100% 100%;
-    }
-    100% {
-      -webkit-transform: rotate3d(-1, 1, 0, -360deg);
-              transform: rotate3d(-1, 1, 0, -360deg);
-      -webkit-transform-origin: 100% 100%;
-              transform-origin: 100% 100%;
-    }
-  }
+    
   .wrong{
     width: 40vw;
     height: 20vw; 
@@ -261,6 +269,9 @@ img:active {
     margin-left: 16vw; 
     margin-right: -14vw;
     animation: alternateColors 0.5s infinite; 
+}
+#wrong4{
+  font-size: 3vw; 
 }
 @keyframes alternateColors{
     0%,
@@ -359,18 +370,21 @@ img:active {
       transition: all infinite; 
       align-self: center;
   }
-
-
-
-
-
-    .punkte{
+  .punkte{
         align-self: center;
         padding: 10px; 
-    }
-    
-
-    #img-uno {
+        animation: blinkScore 3s infinite; 
+      }
+      @keyframes blinkScore{
+        0%, 
+        100%{
+          color: black; 
+        }
+        50%{
+          color: red; 
+        }
+      }
+  #img-uno {
        background-image: url('https://image.api.playstation.com/vulcan/img/rnd/202010/0901/hhIev1lTZ5owLf2eTVnjpFoj.jpg');
     }
     
@@ -519,7 +533,7 @@ img:active {
         min-width: 12vw;
         min-height: 20vw;
         border-radius: 18px;
-        border: solid 5px darkgreen;
+        /* border: solid 5px darkgreen; */
         display: flex;
         justify-content: center;
         align-items: center;
