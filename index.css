@@ -204,9 +204,9 @@ img:hover{
    60% {transform: translateY(-5px);} 
 } */
 
-img {
-  -webkit-animation: rotate-diagonal-br 1s linear 1 both;
-  animation: rotate-diagonal-br 1s linear 1 both;
+img:active {
+  -webkit-animation: rotate-diagonal-br 3s linear 1 both;
+  animation: rotate-diagonal-br 3s linear 1 both;
 }
 @-webkit-keyframes rotate-diagonal-br {
     0% {
