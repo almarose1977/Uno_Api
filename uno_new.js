@@ -330,7 +330,7 @@ function addClassBack4() {
 
 async function chooseCard(cardId) {
 
-    console.log("0. chooseCard - Topcard: ", topCard);
+    // console.log("0. chooseCard - Topcard: ", topCard);
     if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
 
         let playerNameID = cardId.slice(0, cardId.length - 1);
@@ -350,9 +350,9 @@ async function chooseCard(cardId) {
         let cardInformation = await getCardInformation(cardId, currentPlayerName);
         farbe = cardInformation[0];
         wert = cardInformation[1]; // Farbe und Wert der angeklickten Karte werden ausgelesen
-        console.log("1. chooseCard - Farbe und Wert aus cardInformation: ", farbe, wert);
-        console.log("2. chooseCard - cardId: ", cardId);
-        console.log("3. chooseCard - Handkarten: ", handKarten);
+        // console.log("1. chooseCard - Farbe und Wert aus cardInformation: ", farbe, wert);
+        // console.log("2. chooseCard - cardId: ", cardId);
+        // console.log("3. chooseCard - Handkarten: ", handKarten);
 
 
         if (wert === 12) {
@@ -366,10 +366,8 @@ async function chooseCard(cardId) {
                 }
             }
             if (wert === 13 && counter > 0) {
-                console.log("4. chooseCard - Anzahl HK mit passender Farbe: ", topCard.Color, counter);
-
+                // console.log("4. chooseCard - Anzahl HK mit passender Farbe: ", topCard.Color, counter);
                 document.getElementById("wrong4").classList.remove("d-none");
-                // alert("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
             }
             else {
                 wildColor = modalDialogChooseColor(cardId);
@@ -384,17 +382,16 @@ async function chooseCard(cardId) {
             playCard(cardId);
         }
 
-        else {
+        else {  // Richtiger Spieler, falsche Karte ausgewählt
             let element = document.getElementById(cardId);
             element.classList.add('shake-lr');
             setTimeout(function () {
                 element.classList.remove('shake-lr');
             }, 1000);
 
-            console.log("6. chooseCard - farbe und wert der nicht passenden Karte: ", farbe, wert)
+            // console.log("6. chooseCard - farbe und wert der nicht passenden Karte: ", farbe, wert)
             document.getElementById("wrongCard").classList.remove("d-none");
-            // alert("Richtiger Spieler, falsche Karte ausgewählt!")  //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
-        }
+            }
     }
 };
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -419,10 +416,10 @@ async function playCard(cardId) {
     if (response.ok) {
         let result = await response.json();
 
-        console.log("1. playCard - Wert ", wert);
+        // console.log("1. playCard - Wert ", wert);
         spielerIndex = spielerNamenArray.indexOf(currentPlayerName);
-        console.log("2. playCard - spielerindex", spielerIndex);
-        console.log("3. playCard - aktueller Spieler", currentPlayerName);
+        // console.log("2. playCard - spielerindex", spielerIndex);
+        // console.log("3. playCard - aktueller Spieler", currentPlayerName);
 
         if (wert == 13 || wert == 14) {
             wildCardAsTopCard(cardId);
@@ -437,7 +434,7 @@ async function playCard(cardId) {
         // console.log("5. playCard - nach createCardsAfterDelete: Handkarten: ", handKarten);
         updateScore(spielerIndex, currentPlayerName);
 
-        console.log("5b playCard - Spieler, der eben gespielt hat: ", currentPlayerName);
+        // console.log("5b playCard - Spieler, der eben gespielt hat: ", currentPlayerName);
 
         if (wert === 10 || wert === 13) {   //* wenn es eine +2 Karte ist, dann sollen die Karten des nächsten Spielers(der nicht spielen darf), ebenfalls aktualisiert werden
 
@@ -460,7 +457,6 @@ async function playCard(cardId) {
 
         let winner = currentPlayerName;
         currentPlayerName = result.Player;
-        console.log("C. playCard - currentPlayerName = result.Player: ", currentPlayerName);
         if (winner == currentPlayerName) { //* wenn ein Spieler seine letzte Karte spielen kann, ist der Player vom playCardResult nicht mehr der nächste Spieler, sondern der aktuelle 
             document.getElementById("fireworks").classList.remove("d-none");
             document.getElementById("gewinnerSpieler").innerText = currentPlayerName;
@@ -470,7 +466,7 @@ async function playCard(cardId) {
 
         document.getElementById("aktuellerSpielerId").innerText = currentPlayerName;
         topCard = await getTopCard();           //* nochmaliger Aufruf, damit falls eine schwarze Karte gelegt wurde, die entsprechende Wunsch-Farbe ausgegeben wird
-        console.log("6. playCard - TopCard: ", topCard);
+        // console.log("6. playCard - TopCard: ", topCard);
 
     }
     else {
@@ -566,22 +562,15 @@ async function getCardInformation(cardId, currentPlayerName) {
 // Lösung: die Handkarten werden zuerst komplett gelöscht und dann mit der aktuellen Kartenhand wieder aufgebaut!
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ! HILFSFUNKTION removeSelectedCardFromHandDeck(cardId)
-// das firstChild des Elements mit der cardId ist das image (<img src="images/cards/Red8.png" height="150" id="nord1" onclick="checkCard(this.id)">
-// das ParentElement ist: <div class="Handkarten_nord" id="nord1"></div>
+// das Element mit der cardId ist: <div class="Handkarten_nord" id="nord1"></div>
+// das Child des Elements mit der cardId ist das image (<img src="images/cards/Red8.png" height="150" id="nord1" onclick="checkCard(this.id)">
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 function removeSelectedCardFromHandDeck(cardId) {
 
-    let parentElement = document.getElementById(cardId);
-    // console.log("1. ParentElement", parentElement);
-    // selectedCard = document.getElementById(cardId).lastChild;
-    // selectedCard.parentElement.removeChild(selectedCard);
-
     selectedCard = document.getElementById(cardId);
-    console.log("1. removeSelectedCardFromHandDeck - selectedCard", selectedCard);
-
     selectedCard.removeChild;
 };
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ! HILFSFUNKTION replaceTopCard(cardId)
 // lastChild von der id="startkarte", weil davor noch der Text "Ablagestapel" ist
@@ -636,12 +625,8 @@ function deleteAllCardsInHandDeck(currentPlayerName) {
 
 async function createCardsAfterDelete(spielerIndex, playerName) {
 
-    // spielerNamenArray durchlaufen und für jeden Spieler die Karten erstellen lassen, getCards den Spieler mitgeben
-
     getCardsResponse = await getCards(playerName);
-    handKarten = getCardsResponse.Cards;    //
-
-    // console.log("1. createCardsAfterDelete, HandKarten: ", handKarten);
+    handKarten = getCardsResponse.Cards;    
 
     for (let j = 0; j < handKarten.length; j++) {
         let kartenFarbe = handKarten[j].Color;
@@ -649,7 +634,6 @@ async function createCardsAfterDelete(spielerIndex, playerName) {
 
         createCardImage(spielerIndex, j, kartenFarbe, kartenWert);
     }
-
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -659,7 +643,7 @@ async function updateScore(spielerIndex, currentPlayerName) {
 
     getCardsResponse = await getCards(currentPlayerName);
     spielerPunkte = getCardsResponse.Score;
-    // console.log("Spielerpunkte: ", spielerPunkte);
+    
     document.getElementById("spielerPunkteId_" + spielerIndex).innerText = String(spielerPunkte);
 }
 
@@ -709,7 +693,6 @@ async function getCards(currentPlayerName) {
 
     if (response.ok) {
         let result = await response.json();
-        // console.log("getCardsResponse", result);
         return result;
     }
     else {

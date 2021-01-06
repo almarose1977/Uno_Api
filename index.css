@@ -227,9 +227,10 @@ img:hover{
 } */
 
 img:active {
-  -webkit-animation: roll-out-top 1s ease-in both;
-  animation: roll-out-top 1s ease-in both;
+  -webkit-animation: rotate-diagonal-br 3s linear 1 both;
+  animation: rotate-diagonal-br 3s linear 1 both;
 }
+
 @-webkit-keyframes roll-out-top {
   0% {
     -webkit-transform: translateY(0) rotate(0deg);
