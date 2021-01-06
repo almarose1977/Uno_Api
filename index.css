@@ -204,7 +204,7 @@ img:hover{
    60% {transform: translateY(-5px);} 
 } */
 
-img {
+img:active {
   -webkit-animation: rotate-diagonal-br 1s linear 1 both;
   animation: rotate-diagonal-br 1s linear 1 both;
 }
@@ -261,6 +261,9 @@ img {
     margin-left: 16vw; 
     margin-right: -14vw;
     animation: alternateColors 0.5s infinite; 
+}
+#wrong4{
+  font-size: 3vw; 
 }
 @keyframes alternateColors{
     0%,
