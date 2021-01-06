@@ -1,11 +1,11 @@
 # Uno_Api
 
-Willkommen!
+## Willkommen!
 
 Wir haben mit Layout und Modalen Dialog für Spielerinneneingabe begonnen. 
 Dannach die Funktionalität implementiert, und zum Schluss kosmetisch noch nachbehandelt und Animationen hinzugefügt.
 
-Ein paar Schritte dazu: 
+## Ein paar Schritte dazu: 
    Warum werden die Handkarten nach dem Ziehen einer neuen Karte gelöscht und wiederaufgebaut:
    wir wollten jede hinzugekommene Karte aus der drawCard() einfach an das letzte Div des Spielers anhängen mit einem
    fortlaufenden Index (nach nord6 kommt nord7).
@@ -15,7 +15,7 @@ Ein paar Schritte dazu:
    Deshalb ist der Index der Karte ein anderer als die Id des Karten-Images!!!!!!
    Lösung: die Handkarten werden zuerst komplett gelöscht und dann mit der aktuellen Kartenhand wieder aufgebaut!
 
-Probleme: 
+## Probleme: 
 - Javascript hat keine typen festen Variablen. 
 - 'await' und 'async' hat zu schaffen gemacht es wird nicht auf die Informationen gewartet die für die Ausführung der Elemente gebraucht wird.
 - Passend Struktur für Layout zu gestalten war hearusfordernd.
@@ -25,14 +25,14 @@ Probleme:
 - Es ist sehr leicht gefallen in der unendlichen Welt des Web's sich zu verlieren 
 - Serverprobleme.
 
-Fun moments: 
+## Fun moments: 
 - Das Feuerwerk einzubauen.
 - 'DU NICHT!'.
 - Zusammenzuarbeiten wo es ging.
 - Unser Design ist lustig.
 - Wir haben uns weiter entwickelt
 
-Fragen: 
+## Fragen: 
 - der aktuelle Spieler wird nicht immer angezeigt, warum? 
 - bei plus4 und farbwahlkarte nach dem ausspielen, wird der aktueller Spieler als undefined angezeigt und durchs länger Klicken auf Nachziestapel wird der aktueller Spieler wieder angezeigt, warum? 
 - beim img:active lässt sich das spiel nicht immer spielen, warum? 
