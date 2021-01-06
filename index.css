@@ -204,11 +204,10 @@ img:hover{
    60% {transform: translateY(-5px);} 
 } */
 
-img {
-    -webkit-animation: rotate-diagonal-br 0.4s linear 1 both;
-    animation: rotate-diagonal-br 0.4s linear 1 both;
+img:active{
+  -webkit-animation: rotate-diagonal-br 3s linear 1 both;
+  animation: rotate-diagonal-br 3s linear 1 both;
 }
-
 @-webkit-keyframes rotate-diagonal-br {
     0% {
       -webkit-transform: rotate3d(-1, 1, 0, 0deg);
@@ -249,6 +248,38 @@ img {
               transform-origin: 100% 100%;
     }
   }
+  .wrong{
+    width: 40vw;
+    height: 20vw; 
+    border:  #146C80 solid 5px;
+    background-color: #ADFF2F;
+    color:darkblue;
+    border-radius: 25px; 
+    z-index: 2;
+    margin-top: 2vw; 
+    font-size: 4vw;
+    margin-left: 16vw; 
+    margin-right: -14vw;
+    animation: alternateColors 0.5s infinite; 
+}
+@keyframes alternateColors{
+    0%,
+    100%{
+        background-color: #ADFF2F;
+        color:darkblue
+    }
+    50%{
+        background-color: rgb(0, 255, 136);
+        color:magenta
+    }
+}
+.ok{
+    border-radius: 25px;
+    color: yellow;
+    background-color: darkblue;
+}
+
+
 
 #playerNames{
     background-color: #8BFDFE;
@@ -297,12 +328,14 @@ img {
 
 #activePlayer {
     margin-left: -100px;
-    padding-top: 5vw;
+    padding-top: 11vw;
     font-size: 3vh
 }
 #sf-mitte_card_stack_new{
     align-self: center;
     padding-top: 50px;
+    margin-top: -60px; 
+    padding-left: 20px; 
 }
 #sf-mitte_card_stack_new:active{
 	-webkit-animation: drawCardVertFlip 0.5s cubic-bezier(0.1, 0.7, 1.0, 0.1) both;
@@ -388,6 +421,9 @@ img {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
+        margin-bottom: -90px;
+        margin-left: -100px;
+
     }
     /* sn - spielername */
     
@@ -480,14 +516,16 @@ img {
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
-        min-width: 20vw;
-        min-height: 10vw;
+        min-width: 12vw;
+        min-height: 20vw;
         border-radius: 18px;
         border: solid 5px darkgreen;
         display: flex;
         justify-content: center;
         align-items: center;
         margin-left: 38px;
+        margin-right: 48px; 
+        margin-top: -27px; 
     }
     
     #ctn-ost {
@@ -530,7 +568,7 @@ img {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 18px;
+        margin-top: -25px;
     }
     #score-sued{
         border-radius: 50%;
@@ -555,5 +593,12 @@ img {
         margin: 10px;
         margin-bottom: 20px;
     }
+
+    #suedUndWarnings{
+      display:flex; 
+      justify-content: flex-start;
+      align-items: flex-start;
+
+  }
 
     
