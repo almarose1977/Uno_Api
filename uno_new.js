@@ -46,13 +46,10 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
     evt.preventDefault(); // verhindert das Abschicken des post requests vom submit und damit das neuladen der seite (wollen nicht, dass beim uno die seite neu geladen wird)
     // hier kommt der code hin, der anstelle des post requests passieren soll
 
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     let name1 = document.getElementById("player1_id").value.toUpperCase();
     let name2 = document.getElementById("player2_id").value.toUpperCase();
     let name3 = document.getElementById("player3_id").value.toUpperCase();
     let name4 = document.getElementById("player4_id").value.toUpperCase();
-
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // Spielernamen Vergleich
@@ -75,7 +72,6 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
         dictionary[name2] = document.getElementById("ost").id;      // Brandi : ost
         dictionary[name3] = document.getElementById("sued").id;
         dictionary[name4] = document.getElementById("west").id;
-
 
         // Spielernamen den entsprechenden sn-Elementen zuweisen
         document.getElementById("sn-nord").innerText = name1;
