@@ -299,6 +299,25 @@ async function drawCard() {
     }
 };
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Funktion, um Wrong Card wieder auszublenden
+function addClassBackCard() {
+    let wrong = document.getElementById("wrongCard");
+    wrong.classList.add("d-none");
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Funktion, um Wrong Player wieder auszublenden
+function addClassBackPlayer() {
+    let wrong = document.getElementById("wrongPlayer");
+    wrong.classList.add("d-none");
+}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Funktion, um Wrong 4 wieder auszublenden
+function addClassBack4() {
+    let wrong = document.getElementById("wrong4");
+    wrong.classList.add("d-none");
+}
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //! ChooseCard: Farbe + Wert der angeklickten Karte bestimmen und gewünschte Wildcolor definieren
@@ -313,20 +332,20 @@ async function chooseCard(cardId) {
 
     console.log("0. chooseCard - Topcard: ", topCard);
     if (!correctPlayer(cardId)) {                                       // cardId: "nord2" --> 1. Spieler, 3. Karte
-        
-        let playerNameID = cardId.slice(0, cardId.length - 1);          
-        
+
+        let playerNameID = cardId.slice(0, cardId.length - 1);
+
         let element = document.getElementById("sn-" + playerNameID);    // sn-ost, sn-west, sn-nord, sn-sued
-    
+
         element.classList.add('bounce-out-bck');                        //? mögliche Animationen siehe index.css --> Animista
         setTimeout(function () {
             element.classList.remove('bounce-out-bck');
         }, 1500);
-        
+        document.getElementById("wrongPlayer").classList.remove("d-none");
 
-        // alert("Falscher Spieler ausgewählt! Aktueller Spieler ist: " + currentPlayerName);     //? alert, Animation, etc.
     }
     else {      //! wenn's der richtige Spieler ist
+
 
         let cardInformation = await getCardInformation(cardId, currentPlayerName);
         farbe = cardInformation[0];
@@ -348,7 +367,9 @@ async function chooseCard(cardId) {
             }
             if (wert === 13 && counter > 0) {
                 console.log("4. chooseCard - Anzahl HK mit passender Farbe: ", topCard.Color, counter);
-                alert("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
+
+                document.getElementById("wrong4").classList.remove("d-none");
+                // alert("Die +4 Karte darf nicht gespielt werden, da es noch eine passende Farbkarte in den Handkarten gibt!"); //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
             }
             else {
                 wildColor = modalDialogChooseColor(cardId);
@@ -371,6 +392,7 @@ async function chooseCard(cardId) {
             }, 1000);
 
             console.log("6. chooseCard - farbe und wert der nicht passenden Karte: ", farbe, wert)
+            document.getElementById("wrongCard").classList.remove("d-none");
             // alert("Richtiger Spieler, falsche Karte ausgewählt!")  //? Hier wäre eine Möglichkeit, eine Animation zu machen, z.B. die Karte "schütteln", Sound abspielen, etc.
         }
     }
